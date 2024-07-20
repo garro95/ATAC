@@ -8,7 +8,9 @@ impl App<'_> {
         {
             let mut selected_request = local_selected_request.write();
 
-            selected_request.settings.update_from_vec(&self.request_settings_popup.settings)
+            selected_request
+                .settings
+                .update_from_vec(&self.request_settings_popup.settings)
         }
 
         self.save_collection_to_file(selected_request_index.0);

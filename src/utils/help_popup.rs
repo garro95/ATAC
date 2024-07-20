@@ -1,4 +1,4 @@
-use crate::app::app_states::{AppState, next_app_state, previous_app_state};
+use crate::app::app_states::{next_app_state, previous_app_state, AppState};
 
 #[derive(Default)]
 pub struct HelpPopup {

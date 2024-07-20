@@ -2,7 +2,9 @@ use regex::Regex;
 use serde::{Deserialize, Serialize};
 use strum::Display;
 
-use crate::request::body::ContentType::{File, Form, Html, Javascript, Json, Multipart, NoBody, Raw, Xml};
+use crate::request::body::ContentType::{
+    File, Form, Html, Javascript, Json, Multipart, NoBody, Raw, Xml,
+};
 use crate::request::request::KeyValue;
 
 #[derive(Default, Debug, Clone, Display, Serialize, Deserialize)]
@@ -26,7 +28,7 @@ pub enum ContentType {
     #[strum(to_string = "HTML")]
     Html(String),
     #[strum(to_string = "Javascript")]
-    Javascript(String)
+    Javascript(String),
 }
 
 impl ContentType {
@@ -37,7 +39,9 @@ impl ContentType {
             Form(_) => String::from("application/x-www-form-urlencoded"),
             Raw(_) => String::from("text/plain"),
             File(_) => String::from("application/octet-stream"),
-            Json(_) | Xml(_) | Html(_) | Javascript(_) => format!("application/{}", self.to_string().to_lowercase())
+            Json(_) | Xml(_) | Html(_) | Javascript(_) => {
+                format!("application/{}", self.to_string().to_lowercase())
+            }
         }
     }
 
@@ -51,21 +55,21 @@ impl ContentType {
             "application/xml" => Json(body),
             "application/html" => Json(body),
             "application/javascript" => Json(body),
-            _ => NoBody
+            _ => NoBody,
         }
     }
 
     pub fn get_form(&self) -> Option<&Vec<KeyValue>> {
         match self {
             Multipart(form) | Form(form) => Some(form),
-            _ => None
+            _ => None,
         }
     }
 
     pub fn get_form_mut(&mut self) -> Option<&mut Vec<KeyValue>> {
         match self {
             Multipart(form) | Form(form) => Some(form),
-            _ => None
+            _ => None,
         }
     }
 }
@@ -80,7 +84,7 @@ pub fn next_content_type(content_type: &ContentType) -> ContentType {
         Json(body) => Xml(body.to_string()),
         Xml(body) => Html(body.to_string()),
         Html(body) => Javascript(body.to_string()),
-        Javascript(_) => NoBody
+        Javascript(_) => NoBody,
     }
 }
 
@@ -94,10 +98,9 @@ pub fn find_file_format_in_content_type(headers: &Vec<(String, String)>) -> Opti
             // No file format found
             None => None,
             // File format found
-            Some(capture) => Some(capture["file_format"].to_string())
-        }
-    }
-    else {
+            Some(capture) => Some(capture["file_format"].to_string()),
+        };
+    } else {
         return None;
     }
 }

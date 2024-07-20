@@ -14,10 +14,10 @@ impl App<'_> {
 
                 match local_console_output.as_ref() {
                     None => RequestResultTabs::Body,
-                    Some(_) => RequestResultTabs::Console
+                    Some(_) => RequestResultTabs::Console,
                 }
             }
-            RequestResultTabs::Console => RequestResultTabs::Body
+            RequestResultTabs::Console => RequestResultTabs::Body,
         };
 
         self.refresh_result_scrollbars();
@@ -32,36 +32,32 @@ impl App<'_> {
         let selected_request = local_selected_request.read();
 
         match self.request_result_tab {
-            RequestResultTabs::Body => {
-                match &selected_request.response.content {
-                    None => {
+            RequestResultTabs::Body => match &selected_request.response.content {
+                None => {
+                    lines_count = 0;
+                    horizontal_max = 0;
+                }
+                Some(content) => match content {
+                    ResponseContent::Body(body) => {
+                        lines_count = body.lines().count();
+                        horizontal_max = App::get_max_str_len(body.lines());
+                    }
+                    ResponseContent::Image(_) => {
                         lines_count = 0;
                         horizontal_max = 0;
-                    },
-                    Some(content) => match content {
-                        ResponseContent::Body(body) => {
-                            lines_count = body.lines().count();
-                            horizontal_max = App::get_max_str_len(body.lines());
-                        }
-                        ResponseContent::Image(_) => {
-                            lines_count = 0;
-                            horizontal_max = 0;
-                        }
                     }
+                },
+            },
+            RequestResultTabs::Cookies => match &selected_request.response.cookies {
+                None => {
+                    lines_count = 0;
+                    horizontal_max = 0;
                 }
-            }
-            RequestResultTabs::Cookies => {
-                match &selected_request.response.cookies {
-                    None => {
-                        lines_count = 0;
-                        horizontal_max = 0;
-                    },
-                    Some(cookies) => {
-                        lines_count = cookies.lines().count();
-                        horizontal_max = App::get_max_str_len(cookies.lines());
-                    }
+                Some(cookies) => {
+                    lines_count = cookies.lines().count();
+                    horizontal_max = App::get_max_str_len(cookies.lines());
                 }
-            }
+            },
             RequestResultTabs::Headers => {
                 lines_count = selected_request.response.headers.len();
 
@@ -73,7 +69,7 @@ impl App<'_> {
                         max_tmp = str_len;
                     }
                 }
-                
+
                 horizontal_max = max_tmp;
             }
             RequestResultTabs::Console => {
@@ -83,7 +79,7 @@ impl App<'_> {
                     None => {
                         lines_count = 0;
                         horizontal_max = 0;
-                    },
+                    }
                     Some(console_output) => {
                         lines_count = console_output.lines().count();
                         horizontal_max = App::get_max_str_len(console_output.lines());
@@ -95,7 +91,7 @@ impl App<'_> {
         self.result_vertical_scrollbar.set_scroll(lines_count);
         self.result_horizontal_scrollbar.set_scroll(horizontal_max);
     }
-    
+
     pub fn get_max_str_len(lines: Lines) -> usize {
         let mut max_tmp = 0;
 

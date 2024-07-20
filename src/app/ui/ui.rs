@@ -1,17 +1,17 @@
-use ratatui::backend::Backend;
-use ratatui::{Frame, Terminal};
-use ratatui::layout::{Alignment, Constraint, Layout};
-use ratatui::layout::Direction::{Horizontal, Vertical};
-use ratatui::prelude::{Modifier};
-use ratatui::style::{Stylize};
-use ratatui::style::Color::DarkGray;
-use ratatui::text::Line;
-use ratatui::widgets::{Block, Borders};
-use ratatui::widgets::block::Title;
-use crate::app::app::{App};
+use crate::app::app::App;
 use crate::app::app_states::AppState::*;
-use crate::app::app_states::{AVAILABLE_EVENTS, event_available_keys_to_spans};
+use crate::app::app_states::{event_available_keys_to_spans, AVAILABLE_EVENTS};
 use crate::utils::colors::DARK_BLACK;
+use ratatui::backend::Backend;
+use ratatui::layout::Direction::{Horizontal, Vertical};
+use ratatui::layout::{Alignment, Constraint, Layout};
+use ratatui::prelude::Modifier;
+use ratatui::style::Color::DarkGray;
+use ratatui::style::Stylize;
+use ratatui::text::Line;
+use ratatui::widgets::block::Title;
+use ratatui::widgets::{Block, Borders};
+use ratatui::{Frame, Terminal};
 
 impl App<'_> {
     fn ui(&mut self, frame: &mut Frame) {
@@ -25,8 +25,7 @@ impl App<'_> {
                 Constraint::Length(1),
             ],
         )
-            .split(frame.size());
-
+        .split(frame.size());
 
         // HEADER
 
@@ -43,25 +42,17 @@ impl App<'_> {
 
         let inner_layout = Layout::new(
             Horizontal,
-            [
-                Constraint::Percentage(20),
-                Constraint::Percentage(80)
-            ],
+            [Constraint::Percentage(20), Constraint::Percentage(80)],
         )
-            .split(main_layout[1]);
+        .split(main_layout[1]);
 
         // LEFT LAYOUT
 
         match self.environments.is_empty() {
             // No environments
             true => {
-                let env_and_collections_layout = Layout::new(
-                    Vertical,
-                    [
-                        Constraint::Fill(1)
-                    ]
-                )
-                    .split(inner_layout[0]);
+                let env_and_collections_layout =
+                    Layout::new(Vertical, [Constraint::Fill(1)]).split(inner_layout[0]);
 
                 // COLLECTION
 
@@ -69,14 +60,9 @@ impl App<'_> {
             }
             // At least one environment
             false => {
-                let env_and_collections_layout = Layout::new(
-                    Vertical,
-                    [
-                        Constraint::Length(3),
-                        Constraint::Fill(1)
-                    ]
-                )
-                    .split(inner_layout[0]);
+                let env_and_collections_layout =
+                    Layout::new(Vertical, [Constraint::Length(3), Constraint::Fill(1)])
+                        .split(inner_layout[0]);
 
                 // ENVIRONMENTS
 
@@ -93,7 +79,10 @@ impl App<'_> {
         match self.collections_tree.selected {
             None => self.render_homepage(frame, inner_layout[1]),
             Some(selection) => {
-                let selected_request = self.get_request_as_local_from_indexes(&selection).read().clone();
+                let selected_request = self
+                    .get_request_as_local_from_indexes(&selection)
+                    .read()
+                    .clone();
 
                 self.render_request(frame, inner_layout[1], selected_request);
             }
@@ -103,7 +92,8 @@ impl App<'_> {
 
         let state_line = self.get_state_line();
         let events = &*AVAILABLE_EVENTS.read();
-        let available_keys = Line::from(event_available_keys_to_spans(events, DarkGray, *DARK_BLACK, true).concat());
+        let available_keys =
+            Line::from(event_available_keys_to_spans(events, DarkGray, *DARK_BLACK, true).concat());
 
         let footer = Block::new()
             .title(Title::from(state_line).alignment(Alignment::Left))
@@ -127,12 +117,12 @@ impl App<'_> {
         }
 
         if self.should_display_help {
-            self.render_help_popup(frame);   
+            self.render_help_popup(frame);
         }
     }
 
     pub fn draw(&mut self, terminal: &mut Terminal<impl Backend>) -> std::io::Result<()> {
-        terminal.draw(|frame | self.ui(frame))?;
+        terminal.draw(|frame| self.ui(frame))?;
         Ok(())
     }
 }

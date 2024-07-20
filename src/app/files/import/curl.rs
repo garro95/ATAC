@@ -20,12 +20,24 @@ use crate::request::method::Method;
 use crate::request::request::{KeyValue, Request};
 
 impl App<'_> {
-    pub fn import_curl_file(&mut self, path_buf: &PathBuf, collection_name: &String, request_name: &Option<String>, recursive: &bool, max_depth: u16) {
+    pub fn import_curl_file(
+        &mut self,
+        path_buf: &PathBuf,
+        collection_name: &String,
+        request_name: &Option<String>,
+        recursive: &bool,
+        max_depth: u16,
+    ) {
         println!("Parsing cURL request");
 
         println!("Collection name: {}", collection_name);
 
-        let (collection_index, collection) = match self.collections.iter_mut().enumerate().find(|(_, collection)| collection.name == collection_name.as_str()) {
+        let (collection_index, collection) = match self
+            .collections
+            .iter_mut()
+            .enumerate()
+            .find(|(_, collection)| collection.name == collection_name.as_str())
+        {
             Some((index, collection)) => (index, collection),
             None => {
                 println!("Collection does not exist. Creating it...");
@@ -35,25 +47,30 @@ impl App<'_> {
                 let collection = Collection {
                     name: collection_name.clone(),
                     requests: vec![],
-                    path: ARGS.directory.join(format!("{}.{}", collection_name.clone(), file_format.to_string())),
+                    path: ARGS.directory.join(format!(
+                        "{}.{}",
+                        collection_name.clone(),
+                        file_format.to_string()
+                    )),
                     file_format,
                 };
 
                 self.collections.push(collection);
 
-                (self.collections.len()-1, self.collections.last_mut().unwrap())
+                (
+                    self.collections.len() - 1,
+                    self.collections.last_mut().unwrap(),
+                )
             }
         };
 
         let request_name = match request_name {
             None => path_buf.file_stem().unwrap().to_str().unwrap().to_string(),
-            Some(request_name) => request_name.clone()
+            Some(request_name) => request_name.clone(),
         };
 
         let requests = match path_buf.is_file() {
-            true => vec![
-                parse_request(path_buf, request_name)
-            ],
+            true => vec![parse_request(path_buf, request_name)],
             false => parse_requests_recursively(path_buf, *recursive, max_depth),
         };
 
@@ -64,10 +81,14 @@ impl App<'_> {
     }
 }
 
-fn parse_requests_recursively(path: &PathBuf, recursive: bool, max_depth: u16) -> Vec<Arc<RwLock<Request>>> {
+fn parse_requests_recursively(
+    path: &PathBuf,
+    recursive: bool,
+    max_depth: u16,
+) -> Vec<Arc<RwLock<Request>>> {
     let max_depth: usize = match recursive {
         true => max_depth as usize,
-        false => 1
+        false => 1,
     };
 
     let mut requests: Vec<Arc<RwLock<Request>>> = vec![];
@@ -135,7 +156,8 @@ fn parse_request(path: &PathBuf, request_name: String) -> Arc<RwLock<Request>> {
 
     /* HEADERS */
 
-    let headers: Vec<KeyValue> = parsed_curl.headers
+    let headers: Vec<KeyValue> = parsed_curl
+        .headers
         .iter()
         .filter(|(header_name, _)| header_name.as_str() != "authorization") // Exclude Authorization header, as that will be handled by the auth field
         .map(|(k, v)| KeyValue {
@@ -146,24 +168,28 @@ fn parse_request(path: &PathBuf, request_name: String) -> Arc<RwLock<Request>> {
 
     /* AUTH */
 
-    let basic_auth_regex = Regex::new(r#"(-u|--user) ["'](?<username>.*):(?<password>.*)["']"#).unwrap();
+    let basic_auth_regex =
+        Regex::new(r#"(-u|--user) ["'](?<username>.*):(?<password>.*)["']"#).unwrap();
 
     let auth = match basic_auth_regex.captures(&curl_stringed) {
         None => {
-            let bearer_token_header = parsed_curl.headers
-                .iter()
-                .find(|(header_name, value)| header_name.as_str() == "authorization" && value.to_str().unwrap().starts_with("Bearer "));
+            let bearer_token_header = parsed_curl.headers.iter().find(|(header_name, value)| {
+                header_name.as_str() == "authorization"
+                    && value.to_str().unwrap().starts_with("Bearer ")
+            });
 
             if let Some((_, bearer_token)) = bearer_token_header {
                 let bearer_token = &bearer_token.to_str().unwrap()[7..];
 
                 Auth::BearerToken(bearer_token.to_string())
-            }
-            else {
+            } else {
                 Auth::NoAuth
             }
         }
-        Some(capture) => Auth::BasicAuth(capture["username"].to_string(), capture["password"].to_string())
+        Some(capture) => Auth::BasicAuth(
+            capture["username"].to_string(),
+            capture["password"].to_string(),
+        ),
     };
 
     /* BODY */
@@ -172,18 +198,17 @@ fn parse_request(path: &PathBuf, request_name: String) -> Arc<RwLock<Request>> {
 
     // TODO: does not support forms yet
     if !parsed_curl.body.is_empty() {
-        let content_type_header = headers.iter().find(|header| header.data.0 == CONTENT_TYPE.as_str());
+        let content_type_header = headers
+            .iter()
+            .find(|header| header.data.0 == CONTENT_TYPE.as_str());
         let body_stringed = parsed_curl.body.join("\n");
-
 
         if let Some(content_type) = content_type_header {
             body = ContentType::from_content_type(&content_type.data.1, body_stringed);
-        }
-        else {
+        } else {
             body = NoBody;
         }
-    }
-    else {
+    } else {
         body = NoBody;
     }
 

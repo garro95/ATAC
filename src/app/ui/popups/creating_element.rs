@@ -1,12 +1,12 @@
-use ratatui::Frame;
+use crate::app::app::App;
+use crate::utils::centered_rect::centered_rect;
 use ratatui::layout::Direction::Horizontal;
 use ratatui::layout::{Constraint, Layout};
 use ratatui::prelude::{Color, Style};
 use ratatui::style::Color::Yellow;
 use ratatui::style::Stylize;
 use ratatui::widgets::{Block, Borders, Clear, Paragraph};
-use crate::app::app::App;
-use crate::utils::centered_rect::centered_rect;
+use ratatui::Frame;
 
 impl App<'_> {
     pub fn render_creating_element_popup(&mut self, frame: &mut Frame) {
@@ -14,7 +14,6 @@ impl App<'_> {
             .title("Choose element to create")
             .borders(Borders::ALL)
             .style(Style::default().bg(Color::DarkGray));
-
 
         let nb_elements = self.creation_popup.choices.len() as u16;
 
@@ -27,10 +26,7 @@ impl App<'_> {
             constraints.push(Constraint::Percentage(element_percentage));
         }
 
-        let creating_element_layout = Layout::new(
-            Horizontal,
-            constraints
-        )
+        let creating_element_layout = Layout::new(Horizontal, constraints)
             .vertical_margin(1)
             .horizontal_margin(1)
             .split(area);

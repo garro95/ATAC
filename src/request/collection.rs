@@ -1,11 +1,11 @@
-use std::path::PathBuf;
-use std::sync::Arc;
+use crate::request::request::Request;
 use parking_lot::RwLock;
 use ratatui::text::{Line, Span};
 use serde::{Deserialize, Serialize};
+use std::path::PathBuf;
+use std::sync::Arc;
 use strum::Display;
 use tui_tree_widget::TreeItem;
-use crate::request::request::Request;
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
 pub struct Collection {
@@ -16,18 +16,18 @@ pub struct Collection {
     pub path: PathBuf,
 
     #[serde(skip)]
-    pub file_format: CollectionFileFormat
+    pub file_format: CollectionFileFormat,
 }
 
 #[derive(Debug, Default, Copy, Clone, Display, Serialize, Deserialize)]
 pub enum CollectionFileFormat {
     #[default]
-    #[serde(alias="json", alias="JSON")]
+    #[serde(alias = "json", alias = "JSON")]
     #[strum(to_string = "json")]
     Json,
-    #[serde(alias="yaml", alias="YAML")]
+    #[serde(alias = "yaml", alias = "YAML")]
     #[strum(to_string = "yaml")]
-    Yaml
+    Yaml,
 }
 
 impl Collection {
@@ -36,15 +36,14 @@ impl Collection {
 
         let line = Line::from(vec![
             Span::raw(name),
-            Span::from(format!(" ({})", self.requests.len()))
+            Span::from(format!(" ({})", self.requests.len())),
         ]);
 
-        let items: Vec<TreeItem<usize>> = self.requests
+        let items: Vec<TreeItem<usize>> = self
+            .requests
             .iter()
             .enumerate()
-            .map(|(request_index, request)| {
-                request.read().to_tree_item(request_index)
-            })
+            .map(|(request_index, request)| request.read().to_tree_item(request_index))
             .collect();
 
         TreeItem::new(identifier, line, items).unwrap()

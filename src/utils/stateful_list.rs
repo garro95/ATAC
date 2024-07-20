@@ -49,7 +49,7 @@ impl<T> StatefulList<T> {
     pub fn select(&mut self) {
         self.selected = match self.state.selected() {
             Some(i) => Some(i),
-            None => None
+            None => None,
         };
     }
 

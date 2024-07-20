@@ -1,11 +1,11 @@
 pub mod auth;
 pub mod body;
+mod cookies;
 pub mod headers;
 pub mod method;
 pub mod query_params;
+mod scripts;
 pub mod send;
 pub mod settings;
 pub mod url;
 pub(super) mod utils;
-mod cookies;
-mod scripts;

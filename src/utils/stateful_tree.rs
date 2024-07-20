@@ -4,7 +4,7 @@ use tui_tree_widget::{TreeItem, TreeState};
 pub struct StatefulTree<'a> {
     pub state: TreeState<usize>,
     pub items: Vec<TreeItem<'a, usize>>,
-    pub selected: Option<(usize, usize)>
+    pub selected: Option<(usize, usize)>,
 }
 
 impl StatefulTree<'_> {

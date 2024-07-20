@@ -1,12 +1,12 @@
-use ratatui::Frame;
+use crate::app::app::App;
+use crate::utils::centered_rect::centered_rect;
 use ratatui::layout::Direction::Horizontal;
 use ratatui::layout::{Constraint, Layout};
 use ratatui::prelude::{Color, Style};
 use ratatui::style::Color::Yellow;
 use ratatui::style::Stylize;
 use ratatui::widgets::{Block, Borders, Clear, Paragraph};
-use crate::app::app::App;
-use crate::utils::centered_rect::centered_rect;
+use ratatui::Frame;
 
 impl App<'_> {
     pub fn render_deleting_collection_popup(&mut self, frame: &mut Frame) {
@@ -19,14 +19,11 @@ impl App<'_> {
 
         let deleting_request_layout = Layout::new(
             Horizontal,
-            vec![
-                Constraint::Percentage(50),
-                Constraint::Percentage(50),
-            ]
+            vec![Constraint::Percentage(50), Constraint::Percentage(50)],
         )
-            .vertical_margin(1)
-            .horizontal_margin(1)
-            .split(area);
+        .vertical_margin(1)
+        .horizontal_margin(1)
+        .split(area);
 
         let mut no_paragraph = Paragraph::new("no").centered();
         let mut yes_paragraph = Paragraph::new("yes").centered();

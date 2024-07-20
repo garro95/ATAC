@@ -22,11 +22,11 @@ pub enum CookieColumns {
     #[strum(to_string = "Secure")]
     Secure,
     #[strum(to_string = "Same\nsite")]
-    SameSite
+    SameSite,
 }
 
 impl CookieColumns {
-    pub fn constraints() -> [Constraint; 8]{
+    pub fn constraints() -> [Constraint; 8] {
         [
             Constraint::Percentage(10),
             Constraint::Percentage(15),
@@ -35,7 +35,7 @@ impl CookieColumns {
             Constraint::Percentage(10),
             Constraint::Percentage(6),
             Constraint::Percentage(6),
-            Constraint::Percentage(6)
+            Constraint::Percentage(6),
         ]
     }
 }
@@ -92,7 +92,7 @@ impl StatefulCookieTable {
 
         let x = match self.lists_states[selection.1].selected() {
             None => 0,
-            Some(i) => self.decrement_x(i)
+            Some(i) => self.decrement_x(i),
         };
 
         for list_state in self.lists_states.iter_mut() {
@@ -100,7 +100,7 @@ impl StatefulCookieTable {
         }
 
         match self.selection.unwrap() {
-            (_, y) => self.selection = Some((x, y))
+            (_, y) => self.selection = Some((x, y)),
         }
     }
 
@@ -113,7 +113,7 @@ impl StatefulCookieTable {
 
         let x = match self.lists_states[selection.1].selected() {
             None => 0,
-            Some(i) => self.increment_x(i)
+            Some(i) => self.increment_x(i),
         };
 
         for list_state in self.lists_states.iter_mut() {
@@ -121,7 +121,7 @@ impl StatefulCookieTable {
         }
 
         match self.selection.unwrap() {
-            (_, y) => self.selection = Some((x, y))
+            (_, y) => self.selection = Some((x, y)),
         }
     }
 
@@ -135,7 +135,7 @@ impl StatefulCookieTable {
         let y = self.decrement_y(selection.1);
 
         match self.selection.unwrap() {
-            (x, _) => self.selection = Some((x, y))
+            (x, _) => self.selection = Some((x, y)),
         }
     }
 
@@ -149,7 +149,7 @@ impl StatefulCookieTable {
         let y = self.increment_y(selection.1);
 
         match self.selection.unwrap() {
-            (x, _) => self.selection = Some((x, y))
+            (x, _) => self.selection = Some((x, y)),
         }
     }
 }
@@ -165,7 +165,7 @@ impl Default for StatefulCookieTable {
                 ListState::default(),
                 ListState::default(),
                 ListState::default(),
-                ListState::default()
+                ListState::default(),
             ],
             selection: None,
             rows: vec![],
@@ -174,36 +174,36 @@ impl Default for StatefulCookieTable {
     }
 }
 
-pub fn cookie_to_row(cookie: &Cookie) -> [String; COOKIES_COLUMNS_NUMBER]{
+pub fn cookie_to_row(cookie: &Cookie) -> [String; COOKIES_COLUMNS_NUMBER] {
     [
         match cookie.domain() {
             None => String::new(),
-            Some(domain) => domain.to_string()
+            Some(domain) => domain.to_string(),
         },
         cookie.name().to_string(),
         cookie.value().to_string(),
         match cookie.path() {
             None => String::new(),
-            Some(path) => path.to_string()
+            Some(path) => path.to_string(),
         },
         match cookie.expires() {
             None => String::new(),
             Some(expiration) => match expiration.is_datetime() {
                 true => expiration.datetime().unwrap().to_string(),
-                false => String::from("session")
-            }
+                false => String::from("session"),
+            },
         },
         match cookie.http_only() {
             None => String::new(),
-            Some(http_only) => http_only.to_string()
+            Some(http_only) => http_only.to_string(),
         },
         match cookie.secure() {
             None => String::new(),
-            Some(secure) => secure.to_string()
+            Some(secure) => secure.to_string(),
         },
         match cookie.same_site() {
             None => String::new(),
-            Some(same_site) => same_site.to_string()
-        }
+            Some(same_site) => same_site.to_string(),
+        },
     ]
 }

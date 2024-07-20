@@ -1,5 +1,5 @@
-use std::sync::Arc;
 use parking_lot::RwLock;
+use std::sync::Arc;
 
 use ratatui::style::Stylize;
 use ratatui::text::{Line, Span};
@@ -12,15 +12,14 @@ impl App<'_> {
     pub fn get_selected_env_as_local(&self) -> Option<Arc<RwLock<Environment>>> {
         match self.environments.get(self.selected_environment) {
             None => None,
-            Some(env) => Some(env.clone())
+            Some(env) => Some(env.clone()),
         }
     }
-    
+
     pub fn next_environment(&mut self) {
         if self.selected_environment + 1 < self.environments.len() {
             self.selected_environment += 1;
-        }
-        else {
+        } else {
             self.selected_environment = 0;
         }
     }
@@ -59,7 +58,7 @@ impl App<'_> {
 
         if let Some(local_env) = local_env {
             let env = local_env.read();
-            
+
             for match_ in regex.captures_iter(input) {
                 for sub_match in match_.iter() {
                     if let Some(sub_match) = sub_match {
@@ -78,8 +77,7 @@ impl App<'_> {
             }
 
             spans.push(Span::raw(String::from(&input[tmp_index..input.len()])));
-        }
-        else {
+        } else {
             spans.push(Span::raw(input.to_string()));
         }
 

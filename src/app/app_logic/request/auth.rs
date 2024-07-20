@@ -1,6 +1,6 @@
 use crate::app::app::App;
-use crate::request::auth::Auth::{NoAuth, BasicAuth, BearerToken};
 use crate::request::auth::next_auth;
+use crate::request::auth::Auth::{BasicAuth, BearerToken, NoAuth};
 
 impl App<'_> {
     pub fn modify_request_auth(&mut self) {
@@ -31,7 +31,7 @@ impl App<'_> {
             BearerToken(_) => match self.auth_text_input_selection.selected {
                 0 => self.edit_request_auth_bearer_token_state(),
                 _ => {}
-            }
+            },
         }
     }
 

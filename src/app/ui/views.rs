@@ -12,7 +12,7 @@ impl App<'_> {
         self.request_view = match self.request_view {
             RequestView::Normal => RequestView::OnlyResult,
             RequestView::OnlyResult => RequestView::OnlyParams,
-            RequestView::OnlyParams => RequestView::Normal
+            RequestView::OnlyParams => RequestView::Normal,
         };
     }
 }

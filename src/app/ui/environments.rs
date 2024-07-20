@@ -1,8 +1,8 @@
-use ratatui::Frame;
+use crate::app::app::App;
 use ratatui::layout::Rect;
 use ratatui::style::Stylize;
 use ratatui::widgets::{Block, Borders, Paragraph};
-use crate::app::app::App;
+use ratatui::Frame;
 
 impl<'a> App<'a> {
     pub(super) fn render_environments(&mut self, frame: &mut Frame, rect: Rect) {
@@ -13,13 +13,12 @@ impl<'a> App<'a> {
 
         drop(env);
 
-        let current_environment_paragraph = Paragraph::new(current_environment)
-            .block(
-                Block::default()
-                    .title("Environment")
-                    .borders(Borders::ALL)
-                    .dark_gray()
-            );
+        let current_environment_paragraph = Paragraph::new(current_environment).block(
+            Block::default()
+                .title("Environment")
+                .borders(Borders::ALL)
+                .dark_gray(),
+        );
 
         frame.render_widget(current_environment_paragraph, rect)
     }

@@ -6,12 +6,16 @@ use std::path::PathBuf;
 use crate::app::app::App;
 use crate::app::startup::args::ARGS;
 use crate::panic_error;
-use crate::request::collection::{Collection, CollectionFileFormat};
 use crate::request::collection::CollectionFileFormat::{Json, Yaml};
+use crate::request::collection::{Collection, CollectionFileFormat};
 
 impl App<'_> {
     /// Set the app request to the requests found in the collection file
-    pub fn set_collections_from_file(&mut self, path_buf: PathBuf, file_format: CollectionFileFormat) {
+    pub fn set_collections_from_file(
+        &mut self,
+        path_buf: PathBuf,
+        file_format: CollectionFileFormat,
+    ) {
         let mut file_content = String::new();
 
         let mut collection_file = OpenOptions::new()
@@ -21,17 +25,19 @@ impl App<'_> {
             .open(path_buf.clone())
             .expect("\tCould not open collection file");
 
-        collection_file.read_to_string(&mut file_content).expect("\tCould not read collection file");
+        collection_file
+            .read_to_string(&mut file_content)
+            .expect("\tCould not read collection file");
 
         let mut collection: Collection = match file_format {
             Json => match serde_json::from_str(&file_content) {
                 Ok(collection) => collection,
-                Err(e) => panic_error(format!("Could not parse JSON collection\n\t{e}"))
+                Err(e) => panic_error(format!("Could not parse JSON collection\n\t{e}")),
             },
             Yaml => match serde_yaml::from_str(&file_content) {
                 Ok(collection) => collection,
-                Err(e) => panic_error(format!("Could not parse YAML collection\n\t{e}"))
-            }
+                Err(e) => panic_error(format!("Could not parse YAML collection\n\t{e}")),
+            },
         };
 
         collection.path = path_buf;
@@ -50,10 +56,13 @@ impl App<'_> {
 
         let collection = &self.collections[collection_index];
 
-        let temp_file_name = format!("{}_", collection.path.file_name().unwrap().to_str().unwrap());
+        let temp_file_name = format!(
+            "{}_",
+            collection.path.file_name().unwrap().to_str().unwrap()
+        );
 
         let temp_file_path = collection.path.with_file_name(temp_file_name);
-        
+
         let mut temp_file = OpenOptions::new()
             .write(true)
             .create(true)
@@ -62,14 +71,20 @@ impl App<'_> {
             .expect("Could not open temp file");
 
         let collection_stringed = match collection.file_format {
-            Json => serde_json::to_string_pretty(collection).expect("Could not serialize collection to JSON"),
-            Yaml => serde_yaml::to_string(collection).expect("Could not serialize collection to YAML")
+            Json => serde_json::to_string_pretty(collection)
+                .expect("Could not serialize collection to JSON"),
+            Yaml => {
+                serde_yaml::to_string(collection).expect("Could not serialize collection to YAML")
+            }
         };
 
-        temp_file.write_all(collection_stringed.as_bytes()).expect("Could not write to temp file");
+        temp_file
+            .write_all(collection_stringed.as_bytes())
+            .expect("Could not write to temp file");
         temp_file.flush().unwrap();
 
-        fs::rename(temp_file_path, &collection.path).expect("Could not move temp file to collection file");
+        fs::rename(temp_file_path, &collection.path)
+            .expect("Could not move temp file to collection file");
     }
 
     /// Delete collection file

@@ -12,7 +12,7 @@ impl App<'_> {
                 self.headers_table.selection = Some((0, 0));
                 self.headers_table.left_state.select(Some(0));
                 self.headers_table.right_state.select(Some(0));
-            },
+            }
             true => {
                 self.headers_table.selection = None;
                 self.headers_table.left_state.select(None);
@@ -51,7 +51,7 @@ impl App<'_> {
 
             selected_request.headers.push(KeyValue {
                 enabled: true,
-                data: (String::from("header"), String::from("value"))
+                data: (String::from("header"), String::from("value")),
             });
         }
 

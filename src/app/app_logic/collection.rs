@@ -7,7 +7,7 @@ use crate::app::startup::args::ARGS;
 use crate::request::auth::Auth;
 use crate::request::body::ContentType;
 use crate::request::collection::Collection;
-use crate::request::request::{DEFAULT_HEADERS, Request};
+use crate::request::request::{Request, DEFAULT_HEADERS};
 use crate::request::settings::RequestSettings;
 
 impl App<'_> {
@@ -28,7 +28,8 @@ impl App<'_> {
         let local_selected_request = self.get_selected_request_as_local();
         let selected_request = local_selected_request.read();
 
-        self.url_text_input.enter_str(&selected_request.url_with_params_to_string());
+        self.url_text_input
+            .enter_str(&selected_request.url_with_params_to_string());
         self.query_params_table.rows = selected_request.params.clone();
         self.headers_table.rows = selected_request.headers.clone();
 
@@ -38,10 +39,12 @@ impl App<'_> {
             let param_text = match selection {
                 (x, 0) => selected_request.params[x].data.0.clone(),
                 (x, 1) => selected_request.params[x].data.1.clone(),
-                _ => String::new() // Should not happen
+                _ => String::new(), // Should not happen
             };
 
-            self.query_params_table.selection_text_input.enter_str(&param_text);
+            self.query_params_table
+                .selection_text_input
+                .enter_str(&param_text);
         }
 
         match &selected_request.auth {
@@ -70,10 +73,12 @@ impl App<'_> {
             let header_text = match selection {
                 (x, 0) => selected_request.headers[x].data.0.clone(),
                 (x, 1) => selected_request.headers[x].data.1.clone(),
-                _ => String::new() // Should not happen
+                _ => String::new(), // Should not happen
             };
 
-            self.headers_table.selection_text_input.enter_str(&header_text);
+            self.headers_table
+                .selection_text_input
+                .enter_str(&header_text);
         }
 
         match &selected_request.body {
@@ -90,37 +95,43 @@ impl App<'_> {
                     let form_text = match selection {
                         (x, 0) => form[x].data.0.clone(),
                         (x, 1) => form[x].data.1.clone(),
-                        _ => String::new() // Should not happen
+                        _ => String::new(), // Should not happen
                     };
 
-                    self.body_form_table.selection_text_input.enter_str(&form_text);
+                    self.body_form_table
+                        .selection_text_input
+                        .enter_str(&form_text);
                 }
 
                 self.refresh_body_textarea(&String::new());
             }
-            ContentType::File(file_path) =>  {
+            ContentType::File(file_path) => {
                 self.body_file_text_input.enter_str(file_path);
-            },
-            ContentType::Raw(body) | ContentType::Json(body) | ContentType::Xml(body) | ContentType::Html(body) | ContentType::Javascript(body) => {
+            }
+            ContentType::Raw(body)
+            | ContentType::Json(body)
+            | ContentType::Xml(body)
+            | ContentType::Html(body)
+            | ContentType::Javascript(body) => {
                 self.body_form_table.rows = Vec::new();
                 self.refresh_body_textarea(body);
             }
         }
-        
+
         let pre_request_script = match &selected_request.scripts.pre_request_script {
             None => "",
-            Some(pre_request_script) => &pre_request_script
+            Some(pre_request_script) => &pre_request_script,
         };
 
         let post_request_script = match &selected_request.scripts.post_request_script {
             None => "",
-            Some(pre_request_script) => &pre_request_script
+            Some(pre_request_script) => &pre_request_script,
         };
-        
+
         self.refresh_pre_request_script_textarea(pre_request_script);
         self.refresh_post_request_script_textarea(post_request_script);
     }
-    
+
     pub fn reset_cursors(&mut self) {
         self.url_text_input.reset_cursor();
         self.query_params_table.selection_text_input.reset_cursor();
@@ -139,7 +150,7 @@ impl App<'_> {
             self.update_headers_selection();
             self.update_body_table_selection();
             self.refresh_result_scrollbars();
-            
+
             self.select_request_state();
         }
     }
@@ -154,14 +165,14 @@ impl App<'_> {
         match self.collections_tree.state.selected().len() {
             1 => {
                 self.collections_tree.state.toggle_selected();
-            },
+            }
             2 => {
                 self.select_request();
-            },
+            }
             _ => {}
         }
     }
-    
+
     pub fn new_element(&mut self) {
         match self.creation_popup.selection {
             0 => self.create_new_collection_state(),
@@ -169,7 +180,7 @@ impl App<'_> {
             _ => {}
         }
     }
-    
+
     pub fn new_collection(&mut self) {
         let new_collection_name = &self.new_collection_input.text;
 
@@ -183,19 +194,23 @@ impl App<'_> {
                 return;
             }
         }
-        
+
         let file_format = self.config.get_preferred_collection_file_format();
-        
+
         let new_collection = Collection {
             name: new_collection_name.clone(),
             requests: vec![],
-            path: ARGS.directory.join(format!("{}.{}", new_collection_name.clone(), file_format.to_string())),
+            path: ARGS.directory.join(format!(
+                "{}.{}",
+                new_collection_name.clone(),
+                file_format.to_string()
+            )),
             file_format,
         };
 
         self.collections.push(new_collection);
 
-        let collection_index= self.collections.len() - 1;
+        let collection_index = self.collections.len() - 1;
 
         self.save_collection_to_file(collection_index);
         self.normal_state();
@@ -217,7 +232,9 @@ impl App<'_> {
 
         let selected_collection = self.new_request_popup.selected_collection;
 
-        self.collections[selected_collection].requests.push(Arc::new(RwLock::new(new_request)));
+        self.collections[selected_collection]
+            .requests
+            .push(Arc::new(RwLock::new(new_request)));
 
         self.save_collection_to_file(selected_collection);
         self.normal_state();
@@ -250,7 +267,9 @@ impl App<'_> {
         let collection_index = selected_request_index[0].clone();
         let request_index = selected_request_index[1].clone();
 
-        self.collections[collection_index].requests.remove(request_index);
+        self.collections[collection_index]
+            .requests
+            .remove(request_index);
 
         self.collections_tree.state.select(Vec::new());
         self.collections_tree.selected = None;
@@ -292,14 +311,17 @@ impl App<'_> {
         }
 
         let selected_request_index = self.collections_tree.state.selected();
-        let local_selected_request = self.get_request_as_local_from_indexes(&(selected_request_index[0], selected_request_index[1]));
+        let local_selected_request = self.get_request_as_local_from_indexes(&(
+            selected_request_index[0],
+            selected_request_index[1],
+        ));
 
         {
             let mut selected_request = local_selected_request.write();
-            
+
             selected_request.name = new_request_name.to_string();
         }
-        
+
         self.save_collection_to_file(selected_request_index[0]);
         self.normal_state();
     }
@@ -323,7 +345,9 @@ impl App<'_> {
         selection[1] -= 1;
 
         // Insert the request at its new index
-        self.collections[selection[0]].requests.insert(selection[1], request);
+        self.collections[selection[0]]
+            .requests
+            .insert(selection[1], request);
 
         // Update the selection in order to move with the element
         self.collections_tree.state.select(selection.clone());
@@ -350,7 +374,9 @@ impl App<'_> {
         selection[1] += 1;
 
         // Insert the request at its new index
-        self.collections[selection[0]].requests.insert(selection[1], request);
+        self.collections[selection[0]]
+            .requests
+            .insert(selection[1], request);
 
         // Update the selection in order to move with the element
         self.collections_tree.state.select(selection.clone());

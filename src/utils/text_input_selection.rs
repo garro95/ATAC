@@ -9,8 +9,7 @@ impl TextInputSelection {
     pub fn previous(&mut self) {
         if self.selected as isize - 1 >= 0 {
             self.selected -= 1;
-        }
-        else {
+        } else {
             self.selected = self.max_selection - 1;
         }
     }
@@ -18,8 +17,7 @@ impl TextInputSelection {
     pub fn next(&mut self) {
         if self.selected + 1 < self.max_selection {
             self.selected += 1;
-        }
-        else {
+        } else {
             self.selected = 0;
         }
     }

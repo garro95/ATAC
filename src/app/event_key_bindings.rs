@@ -13,18 +13,28 @@ pub struct EventKeyBinding {
 }
 
 impl EventKeyBinding {
-    pub(crate) fn new(keys: Vec<KeyCombination>, event_name: &str, short_name: Option<&str>) -> EventKeyBinding {
+    pub(crate) fn new(
+        keys: Vec<KeyCombination>,
+        event_name: &str,
+        short_name: Option<&str>,
+    ) -> EventKeyBinding {
         EventKeyBinding {
             keys,
             event_name: String::from(event_name),
             short_name: match short_name {
                 None => None,
-                Some(short_name) => Some(String::from(short_name))
-            }
+                Some(short_name) => Some(String::from(short_name)),
+            },
         }
     }
 
-    pub fn to_spans(&self, fg_color: Color, bg_color: Color, short_only: bool, is_documentation: bool) -> Option<Vec<Span<'static>>> {
+    pub fn to_spans(
+        &self,
+        fg_color: Color,
+        bg_color: Color,
+        short_only: bool,
+        is_documentation: bool,
+    ) -> Option<Vec<Span<'static>>> {
         if self.keys.is_empty() {
             return None;
         }
@@ -32,12 +42,10 @@ impl EventKeyBinding {
         let name = if short_only {
             if let Some(short_name) = &self.short_name {
                 short_name
-            }
-            else {
+            } else {
                 return None;
             }
-        }
-        else { 
+        } else {
             &self.event_name
         };
 
@@ -46,12 +54,12 @@ impl EventKeyBinding {
                 Span::raw(name.clone()).bg(bg_color),
                 Span::raw(" "),
                 Span::default(),
-            ])
+            ]);
         }
 
         let mut spans = unique_key_and_help(
             Span::raw(name.clone()).bg(bg_color),
-            Span::raw(self.keys[0].to_string()).fg(fg_color)
+            Span::raw(self.keys[0].to_string()).fg(fg_color),
         );
 
         spans.push(Span::raw(" "));
@@ -59,7 +67,7 @@ impl EventKeyBinding {
         if short_only {
             return Some(spans);
         }
-        
+
         if let Some(key) = self.keys.get(1) {
             spans.push(Span::raw(key.to_string()).fg(fg_color));
             spans.push(Span::raw(" "));

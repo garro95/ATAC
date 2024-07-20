@@ -2,9 +2,9 @@ use std::fs::File;
 use std::sync::Arc;
 use std::time::Duration;
 
-use ratatui::crossterm::terminal::disable_raw_mode;
 use parking_lot::RwLock;
 use ratatui::backend::Backend;
+use ratatui::crossterm::terminal::disable_raw_mode;
 use ratatui::Terminal;
 use throbber_widgets_tui::ThrobberState;
 use tui_textarea::TextArea;
@@ -43,20 +43,16 @@ pub struct App<'a> {
     pub log_file: Option<File>,
 
     /* Help */
-
     pub help_popup: HelpPopup,
 
     /* Environments */
-    
     pub environments: Vec<Arc<RwLock<Environment>>>,
     pub selected_environment: usize,
 
     /* Cookies */
-    
     pub cookies_popup: CookiesPopup,
-    
+
     /* Collections */
-    
     pub collections: Vec<Collection>,
     pub collections_tree: StatefulTree<'a>,
 
@@ -75,7 +71,6 @@ pub struct App<'a> {
     pub delete_request_popup: ValidationPopup,
 
     /* Request */
-
     pub url_text_input: TextInput,
 
     pub query_params_table: StatefulCustomTable,
@@ -101,7 +96,6 @@ pub struct App<'a> {
     pub script_console: ScriptConsole<'a>,
 
     /* Others */
-    
     pub syntax_highlighting: SyntaxHighlighting,
 }
 
@@ -111,7 +105,7 @@ impl App<'_> {
             tick_rate: Duration::from_millis(250),
             should_quit: false,
             should_display_help: false,
-            
+
             state: AppState::Normal,
 
             config: Config::default(),
@@ -119,20 +113,16 @@ impl App<'_> {
             log_file: None,
 
             /* Help */
-
             help_popup: HelpPopup::default(),
 
             /* Environments */
-
             environments: vec![],
             selected_environment: 0,
 
             /* Cookies */
-
             cookies_popup: CookiesPopup::default(),
-            
+
             /* Collections */
-            
             collections: vec![],
             collections_tree: StatefulTree::default(),
 
@@ -142,10 +132,10 @@ impl App<'_> {
             request_result_tab: RequestResultTabs::Body,
 
             creation_popup: ChoicePopup {
-              choices: vec![String::from("Collection"), String::from("Request")],
-              selection: 0
+                choices: vec![String::from("Collection"), String::from("Request")],
+                selection: 0,
             },
-            
+
             new_collection_input: TextInput::default(),
             rename_collection_input: TextInput::default(),
             new_request_popup: NewRequestPopup::default(),
@@ -153,9 +143,8 @@ impl App<'_> {
 
             delete_collection_popup: ValidationPopup::default(),
             delete_request_popup: ValidationPopup::default(),
-            
+
             /* Request */
-            
             url_text_input: TextInput::default(),
 
             query_params_table: StatefulCustomTable::default(),
@@ -172,9 +161,8 @@ impl App<'_> {
             body_text_area: TextArea::default(),
             body_text_area_vim_emulation: Vim::default(),
 
-
             request_settings_popup: SettingsPopup::default(),
-            
+
             result_throbber_state: ThrobberState::default(),
             result_vertical_scrollbar: StatefulScrollbar::default(),
             result_horizontal_scrollbar: StatefulScrollbar::default(),
@@ -182,7 +170,6 @@ impl App<'_> {
             script_console: ScriptConsole::default(),
 
             /* Others */
-
             syntax_highlighting: SyntaxHighlighting::default(),
         }
     }

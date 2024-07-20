@@ -17,7 +17,10 @@ impl App<'_> {
         self.cookies_popup.cookies_table.rows = vec![];
 
         for cookie in local_cookie_store.read().unwrap().iter_any() {
-            self.cookies_popup.cookies_table.rows.push(cookie_to_row(cookie))
+            self.cookies_popup
+                .cookies_table
+                .rows
+                .push(cookie_to_row(cookie))
         }
 
         self.update_cookies_table_selection();
@@ -30,24 +33,32 @@ impl App<'_> {
 
         let input_text = self.cookies_popup.cookies_table.rows[selection.0][selection.1].clone();
 
-        self.cookies_popup.cookies_table.selection_text_input.reset_input();
-        self.cookies_popup.cookies_table.selection_text_input.enter_str(&input_text);
-        self.cookies_popup.cookies_table.selection_text_input.cursor_position = input_text.len();
+        self.cookies_popup
+            .cookies_table
+            .selection_text_input
+            .reset_input();
+        self.cookies_popup
+            .cookies_table
+            .selection_text_input
+            .enter_str(&input_text);
+        self.cookies_popup
+            .cookies_table
+            .selection_text_input
+            .cursor_position = input_text.len();
 
         self.state = AppState::EditingCookies;
     }
 
     pub fn choose_element_to_create_state(&mut self) {
         self.creation_popup.selection = 0;
-        
+
         if self.collections.is_empty() {
             self.create_new_collection_state();
-        }
-        else {
+        } else {
             self.state = AppState::ChoosingElementToCreate;
         }
     }
-    
+
     pub fn create_new_collection_state(&mut self) {
         self.state = AppState::CreatingNewCollection;
     }
@@ -59,17 +70,16 @@ impl App<'_> {
         if collections_length == 0 {
             return;
         }
-        
+
         let selected_collection = &self.collections_tree.state.selected();
 
         // If a collection is already selected, automatically selects it in the popup
         let popup_selected_collection_index = if selected_collection.len() > 0 {
             selected_collection[0]
-        }
-        else {
+        } else {
             0
         };
-        
+
         self.new_request_popup.selected_collection = popup_selected_collection_index;
         self.new_request_popup.max_selection = collections_length;
         self.state = AppState::CreatingNewRequest;
@@ -91,7 +101,7 @@ impl App<'_> {
         let collection_name = &self.collections[selected_request_index[0]].name;
         self.rename_collection_input.text = collection_name.clone();
         self.rename_collection_input.cursor_position = collection_name.len();
-        
+
         self.state = AppState::RenamingCollection;
     }
 
@@ -99,14 +109,16 @@ impl App<'_> {
         let selected_request_index = self.collections_tree.state.selected();
 
         {
-            let selected_request = self.collections[selected_request_index[0]].requests[selected_request_index[1]].read();
+            let selected_request = self.collections[selected_request_index[0]].requests
+                [selected_request_index[1]]
+                .read();
             self.rename_request_input.text = selected_request.name.clone();
             self.rename_request_input.cursor_position = selected_request.name.len();
         }
 
         self.state = AppState::RenamingRequest;
     }
-    
+
     pub fn select_request_state(&mut self) {
         self.state = AppState::SelectedRequest;
         self.update_inputs();
@@ -162,7 +174,6 @@ impl App<'_> {
         self.update_inputs();
     }
 
-
     pub fn edit_request_body_file_or_string_state(&mut self) {
         let local_selected_request = self.get_selected_request_as_local();
 
@@ -173,7 +184,11 @@ impl App<'_> {
                 ContentType::File(_) => {
                     self.state = AppState::EditingRequestBodyFile;
                 }
-                ContentType::Raw(_) | ContentType::Json(_) | ContentType::Xml(_) | ContentType::Html(_) | ContentType::Javascript(_) => {
+                ContentType::Raw(_)
+                | ContentType::Json(_)
+                | ContentType::Xml(_)
+                | ContentType::Html(_)
+                | ContentType::Javascript(_) => {
                     self.state = AppState::EditingRequestBodyString;
                 }
                 _ => {
@@ -188,13 +203,13 @@ impl App<'_> {
 
     pub fn edit_request_script_state(&mut self) {
         self.request_param_tab = RequestParamsTabs::Scripts;
-        
+
         match self.script_console.script_selection {
             0 => self.state = AppState::EditingPreRequestScript,
             1 => self.state = AppState::EditingPostRequestScript,
             _ => {}
         }
-        
+
         self.update_inputs();
     }
 

@@ -5,7 +5,7 @@ pub struct RequestSettings {
     pub use_config_proxy: bool,
     pub allow_redirects: bool,
     pub store_received_cookies: bool,
-    pub pretty_print_response_content: bool
+    pub pretty_print_response_content: bool,
 }
 
 impl Default for RequestSettings {
@@ -24,8 +24,14 @@ impl RequestSettings {
         vec![
             (String::from("Use config proxy"), self.use_config_proxy),
             (String::from("Allow redirects"), self.allow_redirects),
-            (String::from("Store received cookies"), self.store_received_cookies),
-            (String::from("Pretty print response content"), self.pretty_print_response_content),
+            (
+                String::from("Store received cookies"),
+                self.store_received_cookies,
+            ),
+            (
+                String::from("Pretty print response content"),
+                self.pretty_print_response_content,
+            ),
         ]
     }
 
@@ -35,7 +41,9 @@ impl RequestSettings {
                 "Use config proxy" => self.use_config_proxy = *setting_value,
                 "Allow redirects" => self.allow_redirects = *setting_value,
                 "Store received cookies" => self.store_received_cookies = *setting_value,
-                "Pretty print response content" => self.pretty_print_response_content = *setting_value,
+                "Pretty print response content" => {
+                    self.pretty_print_response_content = *setting_value
+                }
                 _ => {}
             }
         }

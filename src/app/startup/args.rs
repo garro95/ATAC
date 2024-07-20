@@ -1,10 +1,10 @@
-use std::env;
-use std::path::PathBuf;
-use clap::{Parser, Subcommand};
-use clap::builder::Styles;
-use lazy_static::lazy_static;
 use crate::app::files::utils::expand_tilde;
 use crate::panic_error;
+use clap::builder::Styles;
+use clap::{Parser, Subcommand};
+use lazy_static::lazy_static;
+use std::env;
+use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None, styles = Styles::styled())]
@@ -64,13 +64,12 @@ pub enum ImportType {
     },
 }
 
-
 pub struct ParsedArgs {
     pub directory: PathBuf,
     #[allow(dead_code)]
     pub is_directory_from_env: bool,
     pub command: Option<Command>,
-    pub should_save: bool
+    pub should_save: bool,
 }
 
 lazy_static! {

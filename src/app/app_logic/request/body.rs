@@ -1,8 +1,8 @@
+use crate::app::app::App;
+use crate::request::body::{next_content_type, ContentType};
+use crate::request::request::KeyValue;
 use reqwest::header::CONTENT_TYPE;
 use tui_textarea::TextArea;
-use crate::app::app::App;
-use crate::request::body::{ContentType, next_content_type};
-use crate::request::request::KeyValue;
 
 impl App<'_> {
     /// Reset selection if body form data is provided, either set it to none
@@ -17,7 +17,7 @@ impl App<'_> {
                         self.body_form_table.selection = Some((0, 0));
                         self.body_form_table.left_state.select(Some(0));
                         self.body_form_table.right_state.select(Some(0));
-                    },
+                    }
                     true => {
                         self.body_form_table.selection = None;
                         self.body_form_table.left_state.select(None);
@@ -61,7 +61,7 @@ impl App<'_> {
             if let Some(form) = selected_request.body.get_form_mut() {
                 form.push(KeyValue {
                     enabled: true,
-                    data: (String::from("key"), String::from("value"))
+                    data: (String::from("key"), String::from("value")),
                 });
             }
         }
@@ -115,10 +115,7 @@ impl App<'_> {
     }
 
     pub fn refresh_body_textarea(&mut self, text: &String) {
-        let lines: Vec<String> = text
-            .lines()
-            .map(|line| line.to_string())
-            .collect();
+        let lines: Vec<String> = text.lines().map(|line| line.to_string()).collect();
 
         self.body_text_area = TextArea::new(lines);
     }
@@ -166,11 +163,17 @@ impl App<'_> {
                 // Removes Content-Type header if there is no more body
                 ContentType::NoBody => {
                     selected_request.find_and_delete_header(CONTENT_TYPE.as_str())
-                },
+                }
                 // TODO: Impossible to set the header for multipart yet, because of boundary and content-length that are computed on reqwest's side
-                ContentType::Multipart(_) => {},
+                ContentType::Multipart(_) => {}
                 // Create or replace Content-Type header with new body content type
-                ContentType::File(_) | ContentType::Form(_) | ContentType::Raw(_) | ContentType::Json(_) | ContentType::Xml(_) | ContentType::Html(_) | ContentType::Javascript(_) => {
+                ContentType::File(_)
+                | ContentType::Form(_)
+                | ContentType::Raw(_)
+                | ContentType::Json(_)
+                | ContentType::Xml(_)
+                | ContentType::Html(_)
+                | ContentType::Javascript(_) => {
                     let content_type = &selected_request.body.to_content_type();
                     selected_request.modify_or_create_header(CONTENT_TYPE.as_str(), content_type)
                 }

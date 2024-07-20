@@ -18,7 +18,7 @@ pub enum Method {
     #[strum(to_string = "HEAD")]
     HEAD,
     #[strum(to_string = "OPTIONS")]
-    OPTIONS
+    OPTIONS,
 }
 
 impl Method {
@@ -42,7 +42,7 @@ impl Method {
             Method::PATCH => reqwest::Method::PATCH,
             Method::DELETE => reqwest::Method::DELETE,
             Method::HEAD => reqwest::Method::HEAD,
-            Method::OPTIONS => reqwest::Method::OPTIONS
+            Method::OPTIONS => reqwest::Method::OPTIONS,
         }
     }
 }
@@ -55,6 +55,6 @@ pub fn next_method(method: &Method) -> Method {
         &Method::PATCH => Method::DELETE,
         &Method::DELETE => Method::HEAD,
         &Method::HEAD => Method::OPTIONS,
-        &Method::OPTIONS => Method::GET
+        &Method::OPTIONS => Method::GET,
     }
 }

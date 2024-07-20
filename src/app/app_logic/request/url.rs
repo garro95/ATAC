@@ -1,6 +1,6 @@
-use regex::Regex;
 use crate::app::app::App;
 use crate::request::request::KeyValue;
+use regex::Regex;
 
 impl App<'_> {
     pub fn modify_request_url(&mut self) {
@@ -25,13 +25,15 @@ impl App<'_> {
                 query_params = "";
             }
 
-
             let mut new_params_to_add: Vec<KeyValue> = vec![];
             let mut existing_params_found_indexes: Vec<usize> = vec![];
 
             let query_params_pattern = Regex::new(r"(&?([^=]+)=([^&]+))").unwrap();
 
-            for (_, [_, param_name, value]) in query_params_pattern.captures_iter(query_params).map(|c| c.extract()) {
+            for (_, [_, param_name, value]) in query_params_pattern
+                .captures_iter(query_params)
+                .map(|c| c.extract())
+            {
                 let mut url_param_found = false;
 
                 for (index, existing_param) in selected_request.params.iter_mut().enumerate() {

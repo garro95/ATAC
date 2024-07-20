@@ -1,6 +1,6 @@
-use ratatui::widgets::{ListState};
 use crate::request::request::KeyValue;
 use crate::utils::text_input::TextInput;
+use ratatui::widgets::ListState;
 
 #[derive(Default)]
 pub struct StatefulCustomTable {
@@ -37,7 +37,7 @@ impl StatefulCustomTable {
         match self.selection.unwrap() {
             (x, 0) => self.selection = Some((x, 1)),
             (x, 1) => self.selection = Some((x, 0)),
-            (x, _) => self.selection = Some((x, 0))
+            (x, _) => self.selection = Some((x, 0)),
         }
 
         let x = self.selection.unwrap().0;
@@ -54,20 +54,20 @@ impl StatefulCustomTable {
         let x = match self.selection.unwrap() {
             (_, 0) => match self.left_state.selected() {
                 None => 0,
-                Some(i) => self.decrement_x(i)
+                Some(i) => self.decrement_x(i),
             },
             (_, 1) => match self.right_state.selected() {
                 None => 0,
-                Some(i) => self.decrement_x(i)
+                Some(i) => self.decrement_x(i),
             },
-            (_, _) => 0
+            (_, _) => 0,
         };
 
         self.left_state.select(Some(x));
         self.right_state.select(Some(x));
 
         match self.selection.unwrap() {
-            (_, y) => self.selection = Some((x, y))
+            (_, y) => self.selection = Some((x, y)),
         }
     }
 
@@ -79,20 +79,20 @@ impl StatefulCustomTable {
         let x = match self.selection.unwrap() {
             (_, 0) => match self.left_state.selected() {
                 None => 0,
-                Some(i) => self.increment_x(i)
+                Some(i) => self.increment_x(i),
             },
             (_, 1) => match self.right_state.selected() {
                 None => 0,
-                Some(i) => self.increment_x(i)
+                Some(i) => self.increment_x(i),
             },
-            (_, _) => 0
+            (_, _) => 0,
         };
 
         self.left_state.select(Some(x));
         self.right_state.select(Some(x));
 
         match self.selection.unwrap() {
-            (_, y) => self.selection = Some((x, y))
+            (_, y) => self.selection = Some((x, y)),
         }
     }
 

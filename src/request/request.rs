@@ -28,7 +28,7 @@ pub struct Request {
     pub response: RequestResponse,
 
     #[serde(skip)]
-    pub is_pending: bool
+    pub is_pending: bool,
 }
 
 #[derive(Default, Debug, Clone, Serialize, Deserialize)]
@@ -63,7 +63,10 @@ lazy_static! {
         },
         KeyValue {
             enabled: true,
-            data: (String::from("user-agent"), format!("ATAC/v{}", env!("CARGO_PKG_VERSION"))),
+            data: (
+                String::from("user-agent"),
+                format!("ATAC/v{}", env!("CARGO_PKG_VERSION"))
+            ),
         },
         KeyValue {
             enabled: true,
@@ -71,7 +74,10 @@ lazy_static! {
         },
         KeyValue {
             enabled: true,
-            data: (String::from("accept-encoding"), String::from("gzip, deflate, br")),
+            data: (
+                String::from("accept-encoding"),
+                String::from("gzip, deflate, br")
+            ),
         },
         KeyValue {
             enabled: true,
@@ -92,8 +98,7 @@ impl Request {
 
         if self.is_pending {
             line_elements.push(Span::raw(" 🕛"));
-        }
-        else {
+        } else {
             line_elements.push(Span::raw(" "));
         }
 
@@ -139,7 +144,10 @@ impl Request {
     }
 
     pub fn find_and_delete_header(&mut self, input_header: &str) {
-        let index = self.headers.iter().position(|header| header.data.0 == input_header);
+        let index = self
+            .headers
+            .iter()
+            .position(|header| header.data.0 == input_header);
 
         match index {
             None => {}

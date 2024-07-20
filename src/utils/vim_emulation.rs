@@ -1,13 +1,13 @@
 use std::fmt::{Display, Error, Formatter};
 
-use crokey::{key, KeyCombination};
 use crokey::OneToThree::One;
+use crokey::{key, KeyCombination};
 use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 use ratatui::layout::Alignment;
 use ratatui::prelude::{Color, Modifier, Style};
 use ratatui::style::Stylize;
-use ratatui::widgets::Block;
 use ratatui::widgets::block::Position;
+use ratatui::widgets::Block;
 use tui_textarea::{CursorMove, Scrolling, TextArea};
 
 use crate::app::app_states::EMPTY_KEY;
@@ -23,7 +23,7 @@ impl Default for Vim {
     fn default() -> Self {
         Vim {
             mode: VimMode::default(),
-            pending: *EMPTY_KEY, 
+            pending: *EMPTY_KEY,
         }
     }
 }
@@ -59,11 +59,11 @@ impl Vim {
                     key!(b) => textarea.move_cursor(CursorMove::WordBack),
                     key!('^') => textarea.move_cursor(CursorMove::Head),
                     key!('$') => textarea.move_cursor(CursorMove::End),
-                    key!(shift-D) => {
+                    key!(shift - D) => {
                         textarea.delete_line_by_end();
                         return VimTransition::Mode(VimMode::Normal);
                     }
-                    key!(shift-C) => {
+                    key!(shift - C) => {
                         textarea.delete_line_by_end();
                         textarea.cancel_selection();
                         return VimTransition::Mode(VimMode::Insert);
@@ -76,7 +76,7 @@ impl Vim {
                         textarea.undo();
                         return VimTransition::Mode(VimMode::Normal);
                     }
-                    key!(ctrl-r) => {
+                    key!(ctrl - r) => {
                         textarea.redo();
                         return VimTransition::Mode(VimMode::Normal);
                     }
@@ -93,7 +93,7 @@ impl Vim {
                         textarea.move_cursor(CursorMove::Forward);
                         return VimTransition::Mode(VimMode::Insert);
                     }
-                    key!(shift-A) => {
+                    key!(shift - A) => {
                         textarea.cancel_selection();
                         textarea.move_cursor(CursorMove::End);
                         return VimTransition::Mode(VimMode::Insert);
@@ -103,30 +103,30 @@ impl Vim {
                         textarea.insert_newline();
                         return VimTransition::Mode(VimMode::Insert);
                     }
-                    key!(shift-O) => {
+                    key!(shift - O) => {
                         textarea.move_cursor(CursorMove::Head);
                         textarea.insert_newline();
                         textarea.move_cursor(CursorMove::Up);
                         return VimTransition::Mode(VimMode::Insert);
                     }
-                    key!(shift-I) => {
+                    key!(shift - I) => {
                         textarea.cancel_selection();
                         textarea.move_cursor(CursorMove::Head);
                         return VimTransition::Mode(VimMode::Insert);
                     }
                     key!(q) => return VimTransition::Quit,
-                    key!(ctrl-s) => return VimTransition::SaveAndQuit,
-                    key!(ctrl-e) => textarea.scroll((1, 0)),
-                    key!(ctrl-y) => textarea.scroll((-1, 0)),
-                    key!(ctrl-d) => textarea.scroll(Scrolling::HalfPageDown),
-                    key!(ctrl-u) => textarea.scroll(Scrolling::HalfPageUp),
-                    key!(ctrl-f) => textarea.scroll(Scrolling::PageDown),
-                    key!(ctrl-b) => textarea.scroll(Scrolling::PageUp),
+                    key!(ctrl - s) => return VimTransition::SaveAndQuit,
+                    key!(ctrl - e) => textarea.scroll((1, 0)),
+                    key!(ctrl - y) => textarea.scroll((-1, 0)),
+                    key!(ctrl - d) => textarea.scroll(Scrolling::HalfPageDown),
+                    key!(ctrl - u) => textarea.scroll(Scrolling::HalfPageUp),
+                    key!(ctrl - f) => textarea.scroll(Scrolling::PageDown),
+                    key!(ctrl - b) => textarea.scroll(Scrolling::PageUp),
                     key!(v) if self.mode == VimMode::Normal => {
                         textarea.start_selection();
                         return VimTransition::Mode(VimMode::Visual);
                     }
-                    key!(shift-V) if self.mode == VimMode::Normal => {
+                    key!(shift - V) if self.mode == VimMode::Normal => {
                         textarea.move_cursor(CursorMove::Head);
                         textarea.start_selection();
                         textarea.move_cursor(CursorMove::End);
@@ -139,8 +139,11 @@ impl Vim {
                     key!(g) if matches!(self.pending, key!(g)) => {
                         textarea.move_cursor(CursorMove::Top)
                     }
-                    key!(shift-G) => textarea.move_cursor(CursorMove::Bottom),
-                    KeyCombination { codes: One(KeyCode::Char(char)), modifiers: KeyModifiers::NONE } if self.mode == VimMode::Operator(char) => {
+                    key!(shift - G) => textarea.move_cursor(CursorMove::Bottom),
+                    KeyCombination {
+                        codes: One(KeyCode::Char(char)),
+                        modifiers: KeyModifiers::NONE,
+                    } if self.mode == VimMode::Operator(char) => {
                         // Handle yy, dd, cc. (This is not strictly the same behavior as Vim)
                         textarea.move_cursor(CursorMove::Head);
                         textarea.start_selection();
@@ -187,7 +190,7 @@ impl Vim {
                 }
             }
             VimMode::Insert => match input {
-                key!(esc) | key!(ctrl-c) => VimTransition::Mode(VimMode::Normal),
+                key!(esc) | key!(ctrl - c) => VimTransition::Mode(VimMode::Normal),
                 input => {
                     let key_event: KeyEvent = input.into();
                     textarea.input(key_event); // Use default key mappings in insert mode
@@ -197,7 +200,6 @@ impl Vim {
         }
     }
 }
-
 
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
 pub enum VimMode {
@@ -245,5 +247,5 @@ pub enum VimTransition {
     Mode(VimMode),
     Pending(KeyCombination),
     Quit,
-    SaveAndQuit
+    SaveAndQuit,
 }

@@ -15,7 +15,10 @@ impl App<'_> {
         self.collections[selected_request_index.0].requests[selected_request_index.1].clone()
     }
 
-    pub fn get_request_as_local_from_indexes(&self, selected_request_index: &(usize, usize)) -> Arc<RwLock<Request>> {
+    pub fn get_request_as_local_from_indexes(
+        &self,
+        selected_request_index: &(usize, usize),
+    ) -> Arc<RwLock<Request>> {
         self.collections[selected_request_index.0].requests[selected_request_index.1].clone()
     }
 
@@ -31,7 +34,9 @@ impl App<'_> {
                 None => {}
                 Some(content) => match content {
                     ResponseContent::Body(body) => {
-                        clipboard.set_text(body).expect("Could not copy response content to clipboard");
+                        clipboard
+                            .set_text(body)
+                            .expect("Could not copy response content to clipboard");
                     }
                     ResponseContent::Image(image_response) => match &image_response.image {
                         None => {}
@@ -42,31 +47,39 @@ impl App<'_> {
                                 .set_image(ImageData {
                                     width: rgba_image.width() as usize,
                                     height: rgba_image.height() as usize,
-                                    bytes: rgba_image.as_bytes().into()
+                                    bytes: rgba_image.as_bytes().into(),
                                 })
                                 .expect("Could not copy response image to clipboard");
                         }
-                    }
-                }
-            }
+                    },
+                },
+            },
             RequestResultTabs::Cookies => match &selected_request.response.cookies {
                 None => {}
-                Some(cookies) => clipboard.set_text(cookies).expect("Could not copy cookies to clipboard")
-            }
+                Some(cookies) => clipboard
+                    .set_text(cookies)
+                    .expect("Could not copy cookies to clipboard"),
+            },
             RequestResultTabs::Headers => {
-                let headers_string: String = selected_request.response.headers
+                let headers_string: String = selected_request
+                    .response
+                    .headers
                     .iter()
                     .map(|(header, value)| format!("{}: {}\n", header, value))
                     .collect();
 
-                clipboard.set_text(headers_string).expect("Could not copy headers to clipboard")
+                clipboard
+                    .set_text(headers_string)
+                    .expect("Could not copy headers to clipboard")
             }
             RequestResultTabs::Console => {
                 let local_console_output = self.script_console.console_output.read();
 
                 match local_console_output.as_ref() {
                     None => {}
-                    Some(console_output) => clipboard.set_text(console_output).expect("Could not copy console output to clipboard")
+                    Some(console_output) => clipboard
+                        .set_text(console_output)
+                        .expect("Could not copy console output to clipboard"),
                 }
             }
         }

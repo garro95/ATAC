@@ -1,20 +1,15 @@
-use ratatui::Frame;
-use ratatui::layout::{Constraint, Layout, Rect};
 use ratatui::layout::Direction::Vertical;
+use ratatui::layout::{Constraint, Layout, Rect};
 use ratatui::style::Stylize;
 use ratatui::widgets::{Block, Borders, Paragraph};
+use ratatui::Frame;
 
 use crate::app::app::App;
 use crate::app::app_states::AppState;
 
 impl App<'_> {
     pub(super) fn render_file_body_tab(&mut self, frame: &mut Frame, area: Rect) {
-        let file_body_layout = Layout::new(
-            Vertical,
-            [
-                Constraint::Length(3),
-            ]
-        )
+        let file_body_layout = Layout::new(Vertical, [Constraint::Length(3)])
             .vertical_margin(1)
             .horizontal_margin(4)
             .split(area);
@@ -31,12 +26,14 @@ impl App<'_> {
         }
 
         let adjusted_input_length = file_body_layout[0].width as usize - 2;
-        let (padded_text, input_cursor_position) = self.body_file_text_input.get_padded_text_and_cursor(adjusted_input_length);
+        let (padded_text, input_cursor_position) = self
+            .body_file_text_input
+            .get_padded_text_and_cursor(adjusted_input_length);
 
         if should_display_cursor {
             frame.set_cursor(
                 file_body_layout[0].x + input_cursor_position as u16 + 1,
-                file_body_layout[0].y + 1
+                file_body_layout[0].y + 1,
             );
         }
 

@@ -1,10 +1,10 @@
-use ratatui::Frame;
-use ratatui::layout::{Constraint, Layout, Rect};
 use ratatui::layout::Direction::{Horizontal, Vertical};
-use ratatui::prelude::{Line, Modifier, Style};
+use ratatui::layout::{Constraint, Layout, Rect};
 use ratatui::prelude::Color::Yellow;
+use ratatui::prelude::{Line, Modifier, Style};
 use ratatui::style::Stylize;
 use ratatui::widgets::{Block, Borders, Clear, List, ListItem, Paragraph};
+use ratatui::Frame;
 
 use crate::app::app::App;
 use crate::utils::centered_rect::centered_rect;
@@ -25,22 +25,13 @@ impl App<'_> {
 
         let horizontal_margin = 1;
 
-        let cookies_layout = Layout::new(
-            Vertical,
-            [
-                Constraint::Length(2),
-                Constraint::Fill(1)
-            ]
-        )
+        let cookies_layout = Layout::new(Vertical, [Constraint::Length(2), Constraint::Fill(1)])
             .vertical_margin(1)
             .horizontal_margin(horizontal_margin)
             .split(area);
 
-        let inner_cookies_layout = Layout::new(
-            Horizontal,
-            CookieColumns::constraints()
-        )
-            .split(cookies_layout[0]);
+        let inner_cookies_layout =
+            Layout::new(Horizontal, CookieColumns::constraints()).split(cookies_layout[0]);
 
         let header_names = vec![
             CookieColumns::URL.to_string(),
@@ -67,13 +58,13 @@ impl App<'_> {
                 let cookies_lines = vec![
                     Line::default(),
                     Line::from("No cookies"),
-                    Line::from("(Add one by sending a request)".gray())
+                    Line::from("(Add one by sending a request)".gray()),
                 ];
 
                 let cookies_paragraph = Paragraph::new(cookies_lines).centered();
 
                 frame.render_widget(cookies_paragraph, cookies_layout[1]);
-            },
+            }
             Some(selection) => {
                 self.render_cookie_list(selection, frame, cookies_layout[1]);
                 //self.render_cookie_cursor(selection, horizontal_margin + 1, frame, cookies_layout[1]);
@@ -82,10 +73,7 @@ impl App<'_> {
     }
 
     fn render_cookie_list(&mut self, selection: (usize, usize), frame: &mut Frame, area: Rect) {
-        let table_layout = Layout::new(
-            Horizontal,
-            CookieColumns::constraints()
-        )
+        let table_layout = Layout::new(Horizontal, CookieColumns::constraints())
             .horizontal_margin(2)
             .split(area);
 
@@ -97,7 +85,7 @@ impl App<'_> {
             vec![],
             vec![],
             vec![],
-            vec![]
+            vec![],
         ];
 
         for cookie in &self.cookies_popup.cookies_table.rows {
@@ -116,10 +104,12 @@ impl App<'_> {
             Style::default(),
             Style::default(),
             Style::default(),
-            Style::default()
+            Style::default(),
         ];
 
-        list_styles[selection.1] = list_styles[selection.1].fg(Yellow).add_modifier(Modifier::BOLD);
+        list_styles[selection.1] = list_styles[selection.1]
+            .fg(Yellow)
+            .add_modifier(Modifier::BOLD);
 
         for (index, cookie) in cookies.iter().enumerate() {
             let list = List::new(cookie.clone()).highlight_style(list_styles[index]);
@@ -127,7 +117,7 @@ impl App<'_> {
             frame.render_stateful_widget(
                 list,
                 table_layout[index],
-                &mut self.cookies_popup.cookies_table.lists_states[index].clone()
+                &mut self.cookies_popup.cookies_table.lists_states[index].clone(),
             );
         }
     }

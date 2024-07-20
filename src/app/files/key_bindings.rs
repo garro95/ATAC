@@ -72,7 +72,7 @@ nest! {
                 pub alt_move_cursor_left: KeyCombination,
                 #[allow(dead_code)]
                 pub alt_move_cursor_right: KeyCombination,
-                
+
                 pub go_back: KeyCombination,
                 pub select: KeyCombination,
             },
@@ -98,7 +98,7 @@ nest! {
 
             pub send_request: KeyCombination,
             pub alt_send_request: KeyCombination,
-            
+
             pub param_tabs: #[derive(Copy, Clone, Deserialize)] pub struct ParamTabs {
                 pub change_auth_method: KeyCombination,
                 pub change_body_content_type: KeyCombination,
@@ -159,8 +159,8 @@ impl Default for KeyBindings {
                 expand_collection: key!(right),
                 unselect_request: key!(left),
 
-                move_request_up: key!(ctrl-up),
-                move_request_down: key!(ctrl-down),
+                move_request_up: key!(ctrl - up),
+                move_request_down: key!(ctrl - down),
 
                 next_environment: key!(e),
 
@@ -168,7 +168,7 @@ impl Default for KeyBindings {
             },
 
             generic: Generic {
-                display_help: key!(Ctrl-h),
+                display_help: key!(Ctrl - h),
 
                 text_inputs: TexInputs {
                     text_input: TextInput {
@@ -194,7 +194,7 @@ impl Default for KeyBindings {
                     alt_move_cursor_down: key!(Down),
                     alt_move_cursor_left: key!(Left),
                     alt_move_cursor_right: key!(Right),
-                    
+
                     go_back: key!(esc),
                     select: key!(enter),
                 },
@@ -220,23 +220,23 @@ impl Default for KeyBindings {
                 // Used to be ctrl + enter, but it doesn't register right on many platforms
                 // https://github.com/crossterm-rs/crossterm/issues/685
                 send_request: key!(space),
-                alt_send_request: key!(ctrl-enter),
+                alt_send_request: key!(ctrl - enter),
 
                 param_tabs: ParamTabs {
-                    change_auth_method: key!(ctrl-a),
-                    change_body_content_type: key!(ctrl-b),
+                    change_auth_method: key!(ctrl - a),
+                    change_body_content_type: key!(ctrl - b),
                 },
                 result_tabs: ResultTabs {
-                    scroll_up: key!(ctrl-up),
-                    scroll_down: key!(ctrl-down),
-                    scroll_left: key!(ctrl-left),
-                    scroll_right: key!(ctrl-right),
+                    scroll_up: key!(ctrl - up),
+                    scroll_down: key!(ctrl - down),
+                    scroll_left: key!(ctrl - left),
+                    scroll_right: key!(ctrl - right),
 
                     yank_response_part: key!(y),
 
-                    result_next_tab: key!(shift-backtab),
+                    result_next_tab: key!(shift - backtab),
                 },
-            }
+            },
         }
     }
 }
@@ -246,13 +246,13 @@ impl Default for CustomTextArea {
         CustomTextArea {
             quit_without_saving: key!(esc),
 
-            copy: key!(ctrl-c),
-            paste: key!(ctrl-v),
+            copy: key!(ctrl - c),
+            paste: key!(ctrl - v),
 
-            undo: key!(ctrl-z),
-            redo: key!(ctrl-y),
+            undo: key!(ctrl - z),
+            redo: key!(ctrl - y),
 
-            save_and_quit: key!(ctrl-s),
+            save_and_quit: key!(ctrl - s),
 
             new_line: key!(enter),
             indent: key!(tab),
@@ -260,8 +260,8 @@ impl Default for CustomTextArea {
             delete_backward: key!(delete),
             delete_forward: key!(backspace),
 
-            skip_word_right: key!(ctrl-right),
-            skip_word_left: key!(ctrl-left),
+            skip_word_right: key!(ctrl - right),
+            skip_word_left: key!(ctrl - left),
 
             move_cursor_up: key!(up),
             move_cursor_down: key!(down),
@@ -286,15 +286,17 @@ impl App<'_> {
 
         let mut key_bindings_file = match OpenOptions::new().read(true).open(path) {
             Ok(key_bindings_file) => key_bindings_file,
-            Err(e) => panic_error(format!("Could not open key bindings file\n\t{e}"))
+            Err(e) => panic_error(format!("Could not open key bindings file\n\t{e}")),
         };
 
         let mut file_content = String::new();
-        key_bindings_file.read_to_string(&mut file_content).expect("\tCould not read key bindings file");
+        key_bindings_file
+            .read_to_string(&mut file_content)
+            .expect("\tCould not read key bindings file");
 
         let config: KeyBindingsConfig = match toml::from_str(&file_content) {
             Ok(config) => config,
-            Err(e) => panic_error(format!("Could not parse key bindings file\n\t{e}"))
+            Err(e) => panic_error(format!("Could not parse key bindings file\n\t{e}")),
         };
 
         *KEY_BINDINGS.write() = config.keybindings;
@@ -306,8 +308,7 @@ impl App<'_> {
 pub fn unique_key_and_help(help: Span<'static>, key: Span<'static>) -> Vec<Span<'static>> {
     if help.to_string() == key.to_string() {
         return vec![help];
-    }
-    else {
+    } else {
         vec![help, Span::raw(" "), key]
     }
 }

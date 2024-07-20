@@ -25,13 +25,12 @@ pub fn highlight(string: &str, extension: &str) -> Option<Vec<Line<'static>>> {
         None => {
             return None;
         }
-        Some(syntax) => syntax
+        Some(syntax) => syntax,
     };
 
     let mut highlight = HighlightLines::new(syntax, &THEME_SET.themes["base16-ocean.dark"]);
 
     let mut lines: Vec<Line> = vec![];
-
 
     for line in string.lines() {
         let result = highlight.highlight_line(line, &SYNTAX_SET).unwrap();
@@ -39,7 +38,11 @@ pub fn highlight(string: &str, extension: &str) -> Option<Vec<Line<'static>>> {
         let mut highlighted_line: Vec<Span> = vec![];
 
         for &(ref style, text) in result.iter() {
-            highlighted_line.push(Span::raw(text.to_string()).fg(Color::Rgb(style.foreground.r, style.foreground.g, style.foreground.b)));
+            highlighted_line.push(Span::raw(text.to_string()).fg(Color::Rgb(
+                style.foreground.r,
+                style.foreground.g,
+                style.foreground.b,
+            )));
         }
 
         lines.push(Line::from(highlighted_line));

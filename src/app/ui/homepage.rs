@@ -1,9 +1,9 @@
-use ratatui::Frame;
-use ratatui::layout::{Constraint, Layout, Rect};
-use ratatui::layout::Direction::{Horizontal, Vertical};
-use ratatui::widgets::{Block, Paragraph};
-use tui_big_text::{BigTextBuilder, PixelSize};
 use crate::app::app::App;
+use ratatui::layout::Direction::{Horizontal, Vertical};
+use ratatui::layout::{Constraint, Layout, Rect};
+use ratatui::widgets::{Block, Paragraph};
+use ratatui::Frame;
+use tui_big_text::{BigTextBuilder, PixelSize};
 
 impl App<'_> {
     pub(super) fn render_homepage(&mut self, frame: &mut Frame, rect: Rect) {
@@ -18,31 +18,28 @@ impl App<'_> {
                 Constraint::Length(1),
                 Constraint::Length(4),
                 Constraint::Length(1),
-                Constraint::Percentage(50)
-            ]
+                Constraint::Percentage(50),
+            ],
         )
-            .split(inner_block_area);
+        .split(inner_block_area);
 
         let title_length = 16;
 
         let title_layout = Layout::new(
             Horizontal,
             [
-                Constraint::Percentage((100-title_length)/2+2),
+                Constraint::Percentage((100 - title_length) / 2 + 2),
                 Constraint::Length(title_length),
-                Constraint::Percentage((100-title_length)/2),
-            ]
+                Constraint::Percentage((100 - title_length) / 2),
+            ],
         )
-            .split(inner_layout[2]);
+        .split(inner_layout[2]);
 
         let title = BigTextBuilder::default()
             .pixel_size(PixelSize::Quadrant)
-            .lines([
-                "ATAC".into(),
-            ])
+            .lines(["ATAC".into()])
             .build()
             .unwrap();
-
 
         let welcome_to = Paragraph::new("Welcome to").centered();
         let description = Paragraph::new("{A}rguably a {T}erminal {A}PI {C}lient").centered();

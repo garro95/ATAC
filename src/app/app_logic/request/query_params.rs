@@ -12,7 +12,7 @@ impl App<'_> {
                 self.query_params_table.selection = Some((0, 0));
                 self.query_params_table.left_state.select(Some(0));
                 self.query_params_table.right_state.select(Some(0));
-            },
+            }
             true => {
                 self.query_params_table.selection = None;
                 self.query_params_table.left_state.select(None);
@@ -42,7 +42,6 @@ impl App<'_> {
         self.select_request_state();
     }
 
-
     pub fn create_new_query_param(&mut self) {
         let selected_request_index = &self.collections_tree.selected.unwrap();
         let local_selected_request = self.get_request_as_local_from_indexes(selected_request_index);
@@ -52,7 +51,7 @@ impl App<'_> {
 
             selected_request.params.push(KeyValue {
                 enabled: true,
-                data: (String::from("param"), String::from("value"))
+                data: (String::from("param"), String::from("value")),
             });
         }
 

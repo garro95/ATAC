@@ -12,19 +12,19 @@ pub struct RequestResponse {
     pub content: Option<ResponseContent>,
 
     pub cookies: Option<String>,
-    pub headers: Vec<(String, String)>
+    pub headers: Vec<(String, String)>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ResponseContent {
     Body(String),
-    Image(ImageResponse)
+    Image(ImageResponse),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ImageResponse {
     pub data: Vec<u8>,
     #[serde(skip)]
-    pub image: Option<DynamicImage>
+    pub image: Option<DynamicImage>,
 }

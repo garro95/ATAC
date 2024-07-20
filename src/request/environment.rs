@@ -7,5 +7,5 @@ use serde::{Deserialize, Serialize};
 pub struct Environment {
     pub name: String,
     pub values: IndexMap<String, String>,
-    pub path: PathBuf
+    pub path: PathBuf,
 }

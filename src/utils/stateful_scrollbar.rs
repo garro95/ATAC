@@ -1,4 +1,4 @@
-use ratatui::widgets::{ScrollbarState};
+use ratatui::widgets::ScrollbarState;
 
 #[derive(Default)]
 pub struct StatefulScrollbar {
@@ -25,8 +25,7 @@ impl StatefulScrollbar {
     pub fn set_scroll(&mut self, lines: usize) {
         if lines > 0 {
             self.max_scroll = lines as u16 - 1;
-        }
-        else {
+        } else {
             self.max_scroll = 0;
         }
 

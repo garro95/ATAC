@@ -8,7 +8,7 @@ impl App<'_> {
             RequestParamsTabs::Auth => RequestParamsTabs::Headers,
             RequestParamsTabs::Headers => RequestParamsTabs::Body,
             RequestParamsTabs::Body => RequestParamsTabs::Scripts,
-            RequestParamsTabs::Scripts => RequestParamsTabs::QueryParams
+            RequestParamsTabs::Scripts => RequestParamsTabs::QueryParams,
         };
 
         self.load_a_request_param_tab();
