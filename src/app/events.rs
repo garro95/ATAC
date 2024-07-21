@@ -757,12 +757,11 @@ impl App<'_> {
                     }
                     VimTransition::Nop | VimTransition::Mode(_) => {
                         self.body_text_area_vim_emulation =
-                            self.body_text_area_vim_emulation.clone();
+                            self.body_text_area_vim_emulation;
                     }
                     VimTransition::Pending(input) => {
                         self.body_text_area_vim_emulation = self
                             .body_text_area_vim_emulation
-                            .clone()
                             .with_pending(input);
                     }
                     VimTransition::Quit => self.select_request_state(),
@@ -834,13 +833,12 @@ impl App<'_> {
                     }
                     VimTransition::Nop | VimTransition::Mode(_) => {
                         self.script_console.vim_emulation =
-                            self.script_console.vim_emulation.clone();
+                            self.script_console.vim_emulation;
                     }
                     VimTransition::Pending(input) => {
                         self.script_console.vim_emulation = self
                             .script_console
                             .vim_emulation
-                            .clone()
                             .with_pending(input);
                     }
                     VimTransition::Quit => self.select_request_state(),
@@ -921,13 +919,12 @@ impl App<'_> {
                     }
                     VimTransition::Nop | VimTransition::Mode(_) => {
                         self.script_console.vim_emulation =
-                            self.script_console.vim_emulation.clone();
+                            self.script_console.vim_emulation;
                     }
                     VimTransition::Pending(input) => {
                         self.script_console.vim_emulation = self
                             .script_console
                             .vim_emulation
-                            .clone()
                             .with_pending(input);
                     }
                     VimTransition::Quit => self.select_request_state(),
@@ -1007,7 +1004,7 @@ impl App<'_> {
             },
         };
 
-        return miss_input;
+        miss_input
     }
 }
 

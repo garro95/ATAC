@@ -17,7 +17,7 @@ impl NewRequestPopup {
     }
 
     pub fn previous_collection(&mut self) {
-        if self.selected_collection as isize - 1 >= 0 {
+        if self.selected_collection as isize > 0 {
             self.selected_collection -= 1;
         } else {
             self.selected_collection = self.max_selection - 1;

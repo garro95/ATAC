@@ -33,16 +33,14 @@ impl App<'_> {
         let inner_cookies_layout =
             Layout::new(Horizontal, CookieColumns::constraints()).split(cookies_layout[0]);
 
-        let header_names = vec![
-            CookieColumns::URL.to_string(),
+        let header_names = [CookieColumns::URL.to_string(),
             CookieColumns::Name.to_string(),
             CookieColumns::Value.to_string(),
             CookieColumns::Path.to_string(),
             CookieColumns::Expires.to_string(),
             CookieColumns::HttpOnly.to_string(),
             CookieColumns::Secure.to_string(),
-            CookieColumns::SameSite.to_string(),
-        ];
+            CookieColumns::SameSite.to_string()];
 
         for (index, header_name) in header_names.iter().enumerate() {
             let paragraph = Paragraph::new(header_name.as_str())

@@ -101,6 +101,6 @@ impl App<'_> {
             }
         }
 
-        return max_tmp;
+        max_tmp
     }
 }

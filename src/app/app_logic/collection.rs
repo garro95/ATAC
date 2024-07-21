@@ -120,12 +120,12 @@ impl App<'_> {
 
         let pre_request_script = match &selected_request.scripts.pre_request_script {
             None => "",
-            Some(pre_request_script) => &pre_request_script,
+            Some(pre_request_script) => pre_request_script,
         };
 
         let post_request_script = match &selected_request.scripts.post_request_script {
             None => "",
-            Some(pre_request_script) => &pre_request_script,
+            Some(pre_request_script) => pre_request_script,
         };
 
         self.refresh_pre_request_script_textarea(pre_request_script);
@@ -203,7 +203,7 @@ impl App<'_> {
             path: ARGS.directory.join(format!(
                 "{}.{}",
                 new_collection_name.clone(),
-                file_format.to_string()
+                file_format
             )),
             file_format,
         };
@@ -264,8 +264,8 @@ impl App<'_> {
 
     pub fn delete_request(&mut self) {
         let selected_request_index = self.collections_tree.state.selected().to_vec();
-        let collection_index = selected_request_index[0].clone();
-        let request_index = selected_request_index[1].clone();
+        let collection_index = selected_request_index[0];
+        let request_index = selected_request_index[1];
 
         self.collections[collection_index]
             .requests

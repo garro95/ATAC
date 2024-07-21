@@ -39,7 +39,7 @@ impl App<'_> {
 
         // REQUEST METHOD
 
-        let method = request.method.clone();
+        let method = request.method;
 
         let method_block = Block::new()
             .title("Method")

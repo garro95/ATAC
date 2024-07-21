@@ -31,22 +31,22 @@ pub struct Proxy {
 
 impl Config {
     pub fn is_syntax_highlighting_disabled(&self) -> bool {
-        return self.disable_syntax_highlighting.unwrap_or(false);
+        self.disable_syntax_highlighting.unwrap_or(false)
     }
 
     pub fn is_cors_disabled(&self) -> bool {
-        return self.disable_cors.unwrap_or(false);
+        self.disable_cors.unwrap_or(false)
     }
 
     pub fn is_image_preview_disabled(&self) -> bool {
-        return self.disable_images_preview.unwrap_or(false);
+        self.disable_images_preview.unwrap_or(false)
     }
 
     pub fn get_preferred_collection_file_format(&self) -> CollectionFileFormat {
-        return match &self.preferred_collection_file_format {
+        match &self.preferred_collection_file_format {
             None => CollectionFileFormat::default(),
-            Some(file_format) => file_format.clone(),
-        };
+            Some(file_format) => *file_format,
+        }
     }
 }
 

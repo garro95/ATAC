@@ -117,7 +117,7 @@ impl App<'_> {
                     let (result_request, env_variables, console_output) =
                         execute_pre_request_script(
                             pre_request_script,
-                            &*selected_request,
+                            &selected_request,
                             env_values,
                         );
 
@@ -128,7 +128,7 @@ impl App<'_> {
                             Some(env_variables) => {
                                 let mut env = local_env.write();
                                 env.values = env_variables;
-                                save_environment_to_file(&*env);
+                                save_environment_to_file(&env);
                             }
                         },
                     }
@@ -440,7 +440,7 @@ impl App<'_> {
                                 Some(env_variables) => {
                                     let mut env = local_env.write();
                                     env.values = env_variables;
-                                    save_environment_to_file(&*env);
+                                    save_environment_to_file(&env);
                                 }
                             },
                         }
@@ -499,5 +499,5 @@ pub fn get_file_content_with_name(path: PathBuf) -> std::io::Result<(Vec<u8>, St
 
     let file_name = path.file_name().unwrap().to_str().unwrap();
 
-    return Ok((buffer, file_name.to_string()));
+    Ok((buffer, file_name.to_string()))
 }

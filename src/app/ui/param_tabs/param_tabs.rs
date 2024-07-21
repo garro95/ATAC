@@ -37,22 +37,22 @@ impl App<'_> {
         let param_tabs = RequestParamsTabs::iter().map(|tab| match tab {
             RequestParamsTabs::QueryParams => match request.params.is_empty() {
                 true => tab.to_string(),
-                false => format!("{} ({})", tab.to_string(), request.params.len()),
+                false => format!("{} ({})", tab, request.params.len()),
             },
             RequestParamsTabs::Auth => match request.auth {
                 NoAuth => tab.to_string(),
                 BasicAuth(_, _) | BearerToken(_) => {
-                    format!("{} ({})", tab.to_string(), request.auth.to_string())
+                    format!("{} ({})", tab, request.auth)
                 }
             },
             RequestParamsTabs::Headers => match request.headers.is_empty() {
                 true => tab.to_string(),
-                false => format!("{} ({})", tab.to_string(), request.headers.len()),
+                false => format!("{} ({})", tab, request.headers.len()),
             },
             RequestParamsTabs::Body => match request.body {
                 NoBody => tab.to_string(),
                 Multipart(_) | Form(_) | File(_) | Raw(_) | Json(_) | Xml(_) | Html(_)
-                | Javascript(_) => format!("{} ({})", tab.to_string(), request.body.to_string()),
+                | Javascript(_) => format!("{} ({})", tab, request.body),
             },
             RequestParamsTabs::Scripts => tab.to_string(),
         });

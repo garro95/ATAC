@@ -42,6 +42,7 @@ impl CookieColumns {
 
 pub const COOKIES_COLUMNS_NUMBER: usize = 8;
 
+#[derive(Default)]
 pub struct StatefulCookieTable {
     pub lists_states: [ListState; COOKIES_COLUMNS_NUMBER],
     /// (x, y)
@@ -154,25 +155,6 @@ impl StatefulCookieTable {
     }
 }
 
-impl Default for StatefulCookieTable {
-    fn default() -> Self {
-        StatefulCookieTable {
-            lists_states: [
-                ListState::default(),
-                ListState::default(),
-                ListState::default(),
-                ListState::default(),
-                ListState::default(),
-                ListState::default(),
-                ListState::default(),
-                ListState::default(),
-            ],
-            selection: None,
-            rows: vec![],
-            selection_text_input: TextInput::default(),
-        }
-    }
-}
 
 pub fn cookie_to_row(cookie: &Cookie) -> [String; COOKIES_COLUMNS_NUMBER] {
     [

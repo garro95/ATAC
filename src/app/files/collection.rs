@@ -93,6 +93,6 @@ impl App<'_> {
             return;
         }
 
-        fs::remove_file(&collection.path).expect("Could not delete collection file");
+        fs::remove_file(collection.path).expect("Could not delete collection file");
     }
 }

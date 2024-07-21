@@ -307,7 +307,7 @@ impl App<'_> {
 
 pub fn unique_key_and_help(help: Span<'static>, key: Span<'static>) -> Vec<Span<'static>> {
     if help.to_string() == key.to_string() {
-        return vec![help];
+        vec![help]
     } else {
         vec![help, Span::raw(" "), key]
     }

@@ -50,7 +50,7 @@ impl App<'_> {
                     path: ARGS.directory.join(format!(
                         "{}.{}",
                         collection_name.clone(),
-                        file_format.to_string()
+                        file_format
                     )),
                     file_format,
                 };
@@ -109,7 +109,7 @@ fn parse_requests_recursively(
         requests.push(request);
     }
 
-    return requests;
+    requests
 }
 
 /// TODO: parse everything with regexes in order to handle everything
@@ -223,5 +223,5 @@ fn parse_request(path: &PathBuf, request_name: String) -> Arc<RwLock<Request>> {
         ..Default::default()
     };
 
-    return Arc::new(RwLock::new(request));
+    Arc::new(RwLock::new(request))
 }

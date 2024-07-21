@@ -12,7 +12,7 @@ impl App<'_> {
         {
             let mut selected_request = local_selected_request.write();
 
-            let url_parts = input_text.split_once("?");
+            let url_parts = input_text.split_once('?');
 
             let final_url: String;
             let query_params: &str;

@@ -50,19 +50,16 @@ impl App<'_> {
         let result_tabs = RequestResultTabs::iter().filter_map(|tab| match tab {
             RequestResultTabs::Body => {
                 if let Some(duration) = &request.response.duration {
-                    Some(format!("{} ({})", tab.to_string(), duration))
+                    Some(format!("{} ({})", tab, duration))
                 } else {
-                    Some(format!("{}", tab.to_string()))
+                    Some(format!("{}", tab))
                 }
             }
             RequestResultTabs::Cookies | RequestResultTabs::Headers => Some(tab.to_string()),
             RequestResultTabs::Console => {
                 let local_console_output = self.script_console.console_output.read();
 
-                match local_console_output.as_ref() {
-                    None => None,
-                    Some(_) => Some(tab.to_string()),
-                }
+                local_console_output.as_ref().map(|_| tab.to_string())
             }
         });
 
@@ -116,7 +113,7 @@ impl App<'_> {
                             {
                                 lines = last_highlighted.clone().unwrap();
                             } else {
-                                lines = body.lines().map(|line| Line::raw(line)).collect();
+                                lines = body.lines().map(Line::raw).collect();
                             }
 
                             let body_paragraph = Paragraph::new(lines).scroll((

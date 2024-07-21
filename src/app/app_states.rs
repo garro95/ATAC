@@ -1517,7 +1517,7 @@ pub fn event_available_keys_to_spans(
 
     spans.last_mut().unwrap().pop();
 
-    return spans;
+    spans
 }
 
 lazy_static! {

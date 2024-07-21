@@ -97,6 +97,6 @@ impl StatefulCustomTable {
     }
 
     pub fn is_selected(&self) -> bool {
-        return self.selection.is_some();
+        self.selection.is_some()
     }
 }

@@ -61,9 +61,9 @@ impl App<'_> {
 
         let lines = [Constraint::Length(1); LINE_LENGTH * NB_LINES];
 
-        let left_layout = Layout::new(Vertical, lines.clone()).split(help_keys_layout[0]);
-        let middle_layout = Layout::new(Vertical, lines.clone()).split(help_keys_layout[1]);
-        let right_layout = Layout::new(Vertical, lines.clone()).split(help_keys_layout[2]);
+        let left_layout = Layout::new(Vertical, lines).split(help_keys_layout[0]);
+        let middle_layout = Layout::new(Vertical, lines).split(help_keys_layout[1]);
+        let right_layout = Layout::new(Vertical, lines).split(help_keys_layout[2]);
 
         let events = &self
             .help_popup

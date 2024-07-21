@@ -74,7 +74,7 @@ impl App<'_> {
         let selected_collection = &self.collections_tree.state.selected();
 
         // If a collection is already selected, automatically selects it in the popup
-        let popup_selected_collection_index = if selected_collection.len() > 0 {
+        let popup_selected_collection_index = if !selected_collection.is_empty() {
             selected_collection[0]
         } else {
             0

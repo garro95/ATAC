@@ -22,7 +22,7 @@ impl App<'_> {
                     ImportType::Postman {
                         import_path,
                         max_depth,
-                    } => self.import_postman_collection(&import_path, max_depth.unwrap_or(99)),
+                    } => self.import_postman_collection(import_path, max_depth.unwrap_or(99)),
 
                     ImportType::Curl {
                         import_path,
@@ -31,7 +31,7 @@ impl App<'_> {
                         recursive,
                         max_depth,
                     } => self.import_curl_file(
-                        &import_path,
+                        import_path,
                         collection_name,
                         request_name,
                         recursive,

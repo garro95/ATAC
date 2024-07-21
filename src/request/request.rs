@@ -140,7 +140,7 @@ impl Request {
             }
         }
 
-        return base_url;
+        base_url
     }
 
     pub fn find_and_delete_header(&mut self, input_header: &str) {

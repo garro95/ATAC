@@ -8,7 +8,7 @@ pub(crate) fn expand_tilde(path_buf: PathBuf) -> PathBuf {
     match dirs::home_dir() {
         Some(mut home_dir) => {
             home_dir.push(path_buf.strip_prefix("~/").unwrap());
-            return home_dir;
+            home_dir
         }
         None => panic!("No home directory found when trying to expand ~"),
     }

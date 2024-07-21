@@ -44,7 +44,7 @@ impl App<'_> {
             requests: vec![],
             path: ARGS
                 .directory
-                .join(format!("{}.{}", collection_name, file_format.to_string())),
+                .join(format!("{}.{}", collection_name, file_format)),
             file_format,
         }];
 
@@ -86,7 +86,7 @@ impl App<'_> {
         }
 
         // Prevent from having an empty collection
-        if collections.len() > 1 && collections[0].requests.len() == 0 {
+        if collections.len() > 1 && collections[0].requests.is_empty() {
             collections.remove(0);
         }
 
@@ -103,17 +103,17 @@ impl App<'_> {
 fn recursive_has_requests(
     item: &mut Items,
     collections: &mut Vec<Collection>,
-    mut nesting_prefix: &mut String,
-    mut depth_level: &mut u16,
+    nesting_prefix: &mut String,
+    depth_level: &mut u16,
     max_depth: u16,
     file_format: CollectionFileFormat,
 ) -> Option<Arc<RwLock<Request>>> {
-    return if is_folder(&item) {
+    return if is_folder(item) {
         let mut requests: Vec<Arc<RwLock<Request>>> = vec![];
 
         let mut folder_name = item.clone().name.unwrap();
-        folder_name = folder_name.replace("/", "-");
-        folder_name = folder_name.replace("\\", "-");
+        folder_name = folder_name.replace('/', "-");
+        folder_name = folder_name.replace('\\', "-");
         folder_name = folder_name.trim().to_string();
 
         let collection_name = format!("{nesting_prefix}{folder_name}");
@@ -132,8 +132,8 @@ fn recursive_has_requests(
                 if let Some(request) = recursive_has_requests(
                     &mut sub_item,
                     collections,
-                    &mut nesting_prefix,
-                    &mut depth_level,
+                    nesting_prefix,
+                    depth_level,
                     max_depth,
                     file_format,
                 ) {
@@ -148,7 +148,7 @@ fn recursive_has_requests(
             }
         }
 
-        if requests.len() > 0 {
+        if !requests.is_empty() {
             println!("\tFound collection \"{}\"", collection_name);
 
             let collection = Collection {
@@ -157,7 +157,7 @@ fn recursive_has_requests(
                 path: ARGS.directory.join(format!(
                     "{}.{}",
                     collection_name,
-                    file_format.to_string()
+                    file_format
                 )),
                 file_format,
             };
@@ -173,7 +173,7 @@ fn recursive_has_requests(
 }
 
 fn recursive_get_requests(item: &mut Items) -> Vec<Arc<RwLock<Request>>> {
-    return if let Some(items) = &mut item.item {
+    if let Some(items) = &mut item.item {
         let mut requests: Vec<Arc<RwLock<Request>>> = vec![];
 
         for item in items {
@@ -183,7 +183,7 @@ fn recursive_get_requests(item: &mut Items) -> Vec<Arc<RwLock<Request>>> {
         requests
     } else {
         vec![Arc::new(RwLock::new(parse_request(item.clone())))]
-    };
+    }
 }
 
 fn is_folder(folder: &Items) -> bool {
@@ -226,7 +226,7 @@ fn parse_request(item: Items) -> Request {
 
             /* QUERY PARAMS */
 
-            match retrieve_query_params(&request_class) {
+            match retrieve_query_params(request_class) {
                 None => {}
                 Some(query_params) => request.params = query_params,
             }
@@ -242,21 +242,21 @@ fn parse_request(item: Items) -> Request {
 
             /* AUTH */
 
-            match retrieve_auth(&request_class) {
+            match retrieve_auth(request_class) {
                 None => {}
                 Some(auth) => request.auth = auth,
             }
 
             /* HEADERS */
 
-            match retrieve_headers(&request_class) {
+            match retrieve_headers(request_class) {
                 None => {}
                 Some(headers) => request.headers = headers,
             }
 
             /* BODY */
 
-            match retrieve_body(&request_class) {
+            match retrieve_body(request_class) {
                 None => {}
                 Some(body) => {
                     match &body {
@@ -274,7 +274,7 @@ fn parse_request(item: Items) -> Request {
         RequestUnion::String(_) => {}
     }
 
-    return request;
+    request
 }
 
 fn retrieve_query_params(request_class: &RequestClass) -> Option<Vec<KeyValue>> {
@@ -305,7 +305,7 @@ fn retrieve_body(request_class: &RequestClass) -> Option<ContentType> {
         Body::BodyClass(body) => {
             let body_mode = body.mode?;
 
-            return match body_mode {
+            match body_mode {
                 Mode::Raw => {
                     let body_as_raw = body.raw?;
 
@@ -349,7 +349,7 @@ fn retrieve_body(request_class: &RequestClass) -> Option<ContentType> {
                                     FormParameterSrcUnion::File(file) => file,
                                     // If there are many files, tries to get the first one
                                     FormParameterSrcUnion::Files(files) => {
-                                        files.get(0)?.to_string()
+                                        files.first()?.to_string()
                                     }
                                 };
 
@@ -388,7 +388,7 @@ fn retrieve_body(request_class: &RequestClass) -> Option<ContentType> {
 
                     Some(ContentType::Form(url_encoded))
                 }
-            };
+            }
         }
     }
 }

@@ -113,13 +113,13 @@ impl TextInput {
 
         if nb_lengths_cursor == nb_lengths_text {
             let text = format!("{ELLIPSIS}{}", &self.text[start_index..]);
-            return (text, self.cursor_position + ELLIPSIS_LENGTH - start_index);
+            (text, self.cursor_position + ELLIPSIS_LENGTH - start_index)
         } else {
             let text = format!(
                 "{ELLIPSIS}{}{ELLIPSIS}",
                 &self.text[start_index..start_index + double_adjusted_length]
             );
-            return (text, self.cursor_position + ELLIPSIS_LENGTH - start_index);
+            (text, self.cursor_position + ELLIPSIS_LENGTH - start_index)
         }
     }
 }

@@ -21,7 +21,7 @@ lazy_static! {
 }
 
 pub fn highlight(string: &str, extension: &str) -> Option<Vec<Line<'static>>> {
-    let syntax = match SYNTAX_SET.find_syntax_by_extension(&extension) {
+    let syntax = match SYNTAX_SET.find_syntax_by_extension(extension) {
         None => {
             return None;
         }
@@ -48,5 +48,5 @@ pub fn highlight(string: &str, extension: &str) -> Option<Vec<Line<'static>>> {
         lines.push(Line::from(highlighted_line));
     }
 
-    return Some(lines);
+    Some(lines)
 }

@@ -10,10 +10,7 @@ use crate::request::environment::Environment;
 
 impl App<'_> {
     pub fn get_selected_env_as_local(&self) -> Option<Arc<RwLock<Environment>>> {
-        match self.environments.get(self.selected_environment) {
-            None => None,
-            Some(env) => Some(env.clone()),
-        }
+        self.environments.get(self.selected_environment).cloned()
     }
 
     pub fn next_environment(&mut self) {
@@ -41,7 +38,7 @@ impl App<'_> {
             }
         }
 
-        return tmp_string;
+        tmp_string
     }
 
     pub fn add_color_to_env_keys(&self, input: &str) -> Line {
@@ -81,6 +78,6 @@ impl App<'_> {
             spans.push(Span::raw(input.to_string()));
         }
 
-        return Line::from(spans);
+        Line::from(spans)
     }
 }
