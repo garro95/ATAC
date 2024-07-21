@@ -89,12 +89,14 @@ pub fn next_content_type(content_type: &ContentType) -> ContentType {
 }
 
 /// Iter through the headers and tries to catch a file format like `application/<file_format>`
-pub fn find_file_format_in_content_type(headers: &Vec<(String, String)>) -> Option<String> {
+pub fn find_file_format_in_content_type(headers: &[(String, String)]) -> Option<String> {
     if let Some((_, content_type)) = headers.iter().find(|(header, _)| *header == "content-type") {
         // Regex that likely catches the file format
         let regex = Regex::new(r"\w+/(?<file_format>\w+)").unwrap();
 
-        return regex.captures(content_type).map(|capture| capture["file_format"].to_string());
+        return regex
+            .captures(content_type)
+            .map(|capture| capture["file_format"].to_string());
     } else {
         None
     }

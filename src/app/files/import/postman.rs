@@ -154,11 +154,9 @@ fn recursive_has_requests(
             let collection = Collection {
                 name: collection_name.clone(),
                 requests,
-                path: ARGS.directory.join(format!(
-                    "{}.{}",
-                    collection_name,
-                    file_format
-                )),
+                path: ARGS
+                    .directory
+                    .join(format!("{}.{}", collection_name, file_format)),
                 file_format,
             };
 
@@ -195,9 +193,10 @@ fn parse_request(item: Items) -> Request {
 
     println!("\t\tFound request \"{}\"", item_name);
 
-    let mut request = Request::default();
-
-    request.name = item_name;
+    let mut request = Request {
+        name: item_name,
+        ..Request::default()
+    };
 
     request.scripts.pre_request_script = retrieve_request_scripts(&item);
 
@@ -419,11 +418,8 @@ fn retrieve_auth(request_class: &RequestClass) -> Option<Auth> {
             let mut bearer_token = String::new();
 
             for bearer_token_attribute in bearer_token_attributes {
-                match bearer_token_attribute.key.as_str() {
-                    "token" => {
-                        bearer_token = bearer_token_attribute.value.unwrap().as_str()?.to_string()
-                    }
-                    _ => {}
+                if bearer_token_attribute.key.as_str() == "token" {
+                    bearer_token = bearer_token_attribute.value.unwrap().as_str()?.to_string()
                 }
             }
 

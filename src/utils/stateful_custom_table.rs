@@ -34,11 +34,11 @@ impl StatefulCustomTable {
             return;
         }
 
-        match self.selection.unwrap() {
-            (x, 0) => self.selection = Some((x, 1)),
-            (x, 1) => self.selection = Some((x, 0)),
-            (x, _) => self.selection = Some((x, 0)),
-        }
+        self.selection = match self.selection.unwrap() {
+            (x, 0) => Some((x, 1)),
+            (x, 1) => Some((x, 0)),
+            (x, _) => Some((x, 0)),
+        };
 
         let x = self.selection.unwrap().0;
 
@@ -66,9 +66,7 @@ impl StatefulCustomTable {
         self.left_state.select(Some(x));
         self.right_state.select(Some(x));
 
-        match self.selection.unwrap() {
-            (_, y) => self.selection = Some((x, y)),
-        }
+        self.selection = Some((x, self.selection.unwrap().1));
     }
 
     pub fn down(&mut self) {
@@ -91,9 +89,7 @@ impl StatefulCustomTable {
         self.left_state.select(Some(x));
         self.right_state.select(Some(x));
 
-        match self.selection.unwrap() {
-            (_, y) => self.selection = Some((x, y)),
-        }
+        self.selection = Some((x, self.selection.unwrap().1));
     }
 
     pub fn is_selected(&self) -> bool {

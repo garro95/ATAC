@@ -105,16 +105,15 @@ impl App<'_> {
                     None => {}
                     Some(content) => match content {
                         ResponseContent::Body(body) => {
-                            let lines: Vec<Line>;
                             let last_highlighted = self.syntax_highlighting.highlighted_body.read();
 
-                            if !self.config.is_syntax_highlighting_disabled()
+                            let lines: Vec<Line> = if !self.config.is_syntax_highlighting_disabled()
                                 && last_highlighted.is_some()
                             {
-                                lines = last_highlighted.clone().unwrap();
+                                last_highlighted.clone().unwrap()
                             } else {
-                                lines = body.lines().map(Line::raw).collect();
-                            }
+                                body.lines().map(Line::raw).collect()
+                            };
 
                             let body_paragraph = Paragraph::new(lines).scroll((
                                 self.result_vertical_scrollbar.scroll,

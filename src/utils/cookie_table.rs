@@ -8,7 +8,7 @@ use crate::utils::text_input::TextInput;
 #[derive(Display, FromRepr)]
 pub enum CookieColumns {
     #[strum(to_string = "URL")]
-    URL,
+    Url,
     #[strum(to_string = "Name")]
     Name,
     #[strum(to_string = "Value")]
@@ -76,7 +76,7 @@ impl StatefulCookieTable {
         }
     }
 
-    pub fn increment_y(&mut self, i: usize) -> usize {
+    pub fn increment_y(&self, i: usize) -> usize {
         if i >= COOKIES_COLUMNS_NUMBER - 1 {
             0
         } else {
@@ -89,9 +89,9 @@ impl StatefulCookieTable {
             return;
         }
 
-        let selection = self.selection.unwrap();
+        let (_, y) = self.selection.unwrap();
 
-        let x = match self.lists_states[selection.1].selected() {
+        let x = match self.lists_states[y].selected() {
             None => 0,
             Some(i) => self.decrement_x(i),
         };
@@ -100,9 +100,7 @@ impl StatefulCookieTable {
             list_state.select(Some(x));
         }
 
-        match self.selection.unwrap() {
-            (_, y) => self.selection = Some((x, y)),
-        }
+        self.selection = Some((x, y))
     }
 
     pub fn down(&mut self) {
@@ -110,9 +108,9 @@ impl StatefulCookieTable {
             return;
         }
 
-        let selection = self.selection.unwrap();
+        let (_, y) = self.selection.unwrap();
 
-        let x = match self.lists_states[selection.1].selected() {
+        let x = match self.lists_states[y].selected() {
             None => 0,
             Some(i) => self.increment_x(i),
         };
@@ -121,9 +119,7 @@ impl StatefulCookieTable {
             list_state.select(Some(x));
         }
 
-        match self.selection.unwrap() {
-            (_, y) => self.selection = Some((x, y)),
-        }
+        self.selection = Some((x, y));
     }
 
     pub fn left(&mut self) {
@@ -131,13 +127,10 @@ impl StatefulCookieTable {
             return;
         }
 
-        let selection = self.selection.unwrap();
+        let (x, y) = self.selection.unwrap();
+        let y = self.decrement_y(y);
 
-        let y = self.decrement_y(selection.1);
-
-        match self.selection.unwrap() {
-            (x, _) => self.selection = Some((x, y)),
-        }
+        self.selection = Some((x, y));
     }
 
     pub fn right(&mut self) {
@@ -145,16 +138,12 @@ impl StatefulCookieTable {
             return;
         }
 
-        let selection = self.selection.unwrap();
+        let (x, y) = self.selection.unwrap();
+        let y = self.increment_y(y);
 
-        let y = self.increment_y(selection.1);
-
-        match self.selection.unwrap() {
-            (x, _) => self.selection = Some((x, y)),
-        }
+        self.selection = Some((x, y));
     }
 }
-
 
 pub fn cookie_to_row(cookie: &Cookie) -> [String; COOKIES_COLUMNS_NUMBER] {
     [

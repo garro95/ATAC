@@ -756,13 +756,11 @@ impl App<'_> {
                         self.body_text_area_vim_emulation = Vim::new(mode);
                     }
                     VimTransition::Nop | VimTransition::Mode(_) => {
-                        self.body_text_area_vim_emulation =
-                            self.body_text_area_vim_emulation;
+                        self.body_text_area_vim_emulation = self.body_text_area_vim_emulation;
                     }
                     VimTransition::Pending(input) => {
-                        self.body_text_area_vim_emulation = self
-                            .body_text_area_vim_emulation
-                            .with_pending(input);
+                        self.body_text_area_vim_emulation =
+                            self.body_text_area_vim_emulation.with_pending(input);
                     }
                     VimTransition::Quit => self.select_request_state(),
                     VimTransition::SaveAndQuit => self.modify_request_body(),
@@ -832,14 +830,11 @@ impl App<'_> {
                         self.script_console.vim_emulation = Vim::new(mode);
                     }
                     VimTransition::Nop | VimTransition::Mode(_) => {
-                        self.script_console.vim_emulation =
-                            self.script_console.vim_emulation;
+                        self.script_console.vim_emulation = self.script_console.vim_emulation;
                     }
                     VimTransition::Pending(input) => {
-                        self.script_console.vim_emulation = self
-                            .script_console
-                            .vim_emulation
-                            .with_pending(input);
+                        self.script_console.vim_emulation =
+                            self.script_console.vim_emulation.with_pending(input);
                     }
                     VimTransition::Quit => self.select_request_state(),
                     VimTransition::SaveAndQuit => self.modify_pre_request_script(),
@@ -918,14 +913,11 @@ impl App<'_> {
                         self.script_console.vim_emulation = Vim::new(mode);
                     }
                     VimTransition::Nop | VimTransition::Mode(_) => {
-                        self.script_console.vim_emulation =
-                            self.script_console.vim_emulation;
+                        self.script_console.vim_emulation = self.script_console.vim_emulation;
                     }
                     VimTransition::Pending(input) => {
-                        self.script_console.vim_emulation = self
-                            .script_console
-                            .vim_emulation
-                            .with_pending(input);
+                        self.script_console.vim_emulation =
+                            self.script_console.vim_emulation.with_pending(input);
                     }
                     VimTransition::Quit => self.select_request_state(),
                     VimTransition::SaveAndQuit => self.modify_post_request_script(),

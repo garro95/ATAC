@@ -48,13 +48,13 @@ impl Method {
 }
 
 pub fn next_method(method: &Method) -> Method {
-    match method {
-        &Method::GET => Method::POST,
-        &Method::POST => Method::PUT,
-        &Method::PUT => Method::PATCH,
-        &Method::PATCH => Method::DELETE,
-        &Method::DELETE => Method::HEAD,
-        &Method::HEAD => Method::OPTIONS,
-        &Method::OPTIONS => Method::GET,
+    match *method {
+        Method::GET => Method::POST,
+        Method::POST => Method::PUT,
+        Method::PUT => Method::PATCH,
+        Method::PATCH => Method::DELETE,
+        Method::DELETE => Method::HEAD,
+        Method::HEAD => Method::OPTIONS,
+        Method::OPTIONS => Method::GET,
     }
 }

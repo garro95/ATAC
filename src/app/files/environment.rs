@@ -46,11 +46,9 @@ fn read_environment_from_file(file: File) -> IndexMap<String, String> {
     let reader = BufReader::new(file);
     let mut environment_values = IndexMap::new();
 
-    for line in reader.lines() {
-        if let Ok(line) = line {
-            if let Some((key, value)) = parse_line(line.trim().as_bytes()) {
-                environment_values.insert(key, value);
-            }
+    for line in reader.lines().flatten() {
+        if let Some((key, value)) = parse_line(line.trim().as_bytes()) {
+            environment_values.insert(key, value);
         }
     }
 
@@ -82,6 +80,8 @@ fn parse_line(entry: &[u8]) -> Option<(String, String)> {
 
 /// Save app environment in a file through a temporary file
 pub fn save_environment_to_file(environment: &Environment) {
+    use std::fmt::Write;
+    
     if !ARGS.should_save {
         return;
     }
@@ -103,8 +103,10 @@ pub fn save_environment_to_file(environment: &Environment) {
     let mut data: String = environment
         .values
         .iter()
-        .map(|(key, value)| format!("{key}={value}\n"))
-        .collect();
+        .fold(String::new(), |mut output, (key, value)| {
+            writeln!(output, "{key}={value}").unwrap();
+            output
+        });
 
     data.pop();
 

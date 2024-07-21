@@ -23,5 +23,5 @@ pub fn centered_rect(columns: u16, lines: u16, r: Rect) -> Rect {
             Constraint::Length(columns),
             Constraint::Percentage(y_space),
         ])
-        .split(popup_layout[1])[1]// Return the middle chunk
+        .split(popup_layout[1])[1] // Return the middle chunk
 }

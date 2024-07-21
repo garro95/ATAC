@@ -38,7 +38,7 @@ pub struct KeyValue {
 }
 
 impl App<'_> {
-    pub fn key_value_vec_to_tuple_vec(&self, key_value: &Vec<KeyValue>) -> Vec<(String, String)> {
+    pub fn key_value_vec_to_tuple_vec(&self, key_value: &[KeyValue]) -> Vec<(String, String)> {
         key_value
             .iter()
             .filter_map(|param| {

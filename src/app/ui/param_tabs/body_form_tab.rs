@@ -14,7 +14,7 @@ impl App<'_> {
         &mut self,
         frame: &mut Frame,
         area: Rect,
-        form: &Vec<KeyValue>,
+        form: &[KeyValue],
         form_selection: (usize, usize),
     ) {
         let form_layout =

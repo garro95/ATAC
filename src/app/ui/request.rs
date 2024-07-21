@@ -75,12 +75,11 @@ impl App<'_> {
 
         frame.render_widget(url_paragraph, request_header_layout[1]);
 
-        match self.state {
-            EditingRequestUrl => frame.set_cursor(
+        if self.state == EditingRequestUrl {
+            frame.set_cursor(
                 request_header_layout[1].x + input_cursor_position as u16 + 2,
                 request_header_layout[1].y + 1,
-            ),
-            _ => {}
+            )
         }
 
         // REQUEST MAIN LAYOUT
