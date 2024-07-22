@@ -32,8 +32,14 @@ impl App<'_> {
             let input_text = &self.query_params_table.selection_text_input.text;
 
             match selection {
-                (_, 0) => selected_request.params[selection.0].data.0 = input_text.clone(),
-                (_, 1) => selected_request.params[selection.0].data.1 = input_text.clone(),
+                (_, 0) => selected_request.params[selection.0]
+                    .data
+                    .0
+                    .clone_from(input_text),
+                (_, 1) => selected_request.params[selection.0]
+                    .data
+                    .1
+                    .clone_from(input_text),
                 (_, _) => {}
             };
         }

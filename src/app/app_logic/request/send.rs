@@ -227,10 +227,8 @@ impl App<'_> {
                         let value = self.replace_env_keys_by_value(&form_data.data.1);
 
                         // If the value starts with !!, then it is supposed to be a file
-                        if value.starts_with("!!") {
-                            let path = PathBuf::from(&value[2..]);
-
-                            match get_file_content_with_name(path) {
+                        if let Some(path) = value.strip_prefix("!!") {
+                            match get_file_content_with_name(path.into()) {
                                 Ok((file_content, file_name)) => {
                                     let part = Part::bytes(file_content).file_name(file_name);
                                     multipart = multipart.part(key, part);
@@ -334,48 +332,39 @@ impl App<'_> {
                             .collect::<Vec<String>>()
                             .join("\n");
 
-                        let response_content = match is_image {
-                            true => {
-                                let content = response.bytes().await.unwrap();
-                                let image = image::load_from_memory(content.as_ref());
+                        let response_content = if is_image {
+                            let content = response.bytes().await.unwrap();
+                            let image = image::load_from_memory(content.as_ref());
 
-                                ResponseContent::Image(ImageResponse {
-                                    data: content.to_vec(),
-                                    image: image.ok(),
-                                })
-                            }
-                            false => {
-                                let mut result_body = response.text().await.unwrap();
+                            ResponseContent::Image(ImageResponse {
+                                data: content.to_vec(),
+                                image: image.ok(),
+                            })
+                        } else {
+                            let mut result_body = response.text().await.unwrap();
 
-                                // If a file format has been found in the content-type header
-                                if let Some(file_format) =
-                                    find_file_format_in_content_type(&headers)
+                            // If a file format has been found in the content-type header
+                            if let Some(file_format) = find_file_format_in_content_type(&headers) {
+                                // If the request response content can be pretty printed
+                                if local_selected_request
+                                    .read()
+                                    .settings
+                                    .pretty_print_response_content
                                 {
-                                    // If the request response content can be pretty printed
-                                    if local_selected_request
-                                        .read()
-                                        .settings
-                                        .pretty_print_response_content
-                                    {
-                                        // Match the file format
-                                        match file_format.as_str() {
-                                            "json" => {
-                                                result_body = jsonxf::pretty_print(&result_body)
-                                                    .unwrap_or(result_body);
-                                            }
-                                            _ => {}
-                                        }
+                                    // Match the file format
+                                    if file_format.as_str() == "json" {
+                                        result_body = jsonxf::pretty_print(&result_body)
+                                            .unwrap_or(result_body);
                                     }
-
-                                    let highlighted_result_body =
-                                        highlight(&result_body, &file_format);
-                                    *local_highlighted_body.write() = highlighted_result_body;
-                                } else {
-                                    *local_highlighted_body.write() = None;
                                 }
 
-                                ResponseContent::Body(result_body)
+                                let highlighted_result_body = highlight(&result_body, &file_format);
+                                *local_highlighted_body.write() = highlighted_result_body;
+                            } else {
+                                *local_highlighted_body.write() = None;
                             }
+
+                            ResponseContent::Body(result_body)
                         };
 
                         RequestResponse {

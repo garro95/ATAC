@@ -57,17 +57,15 @@ impl App<'_> {
             let env = local_env.read();
 
             for match_ in regex.captures_iter(input) {
-                for sub_match in match_.iter() {
-                    if let Some(sub_match) = sub_match {
-                        for (key, _) in &env.values {
-                            if sub_match.as_str() == &format!("{{{{{}}}}}", key) {
-                                let range = sub_match.range();
+                for sub_match in match_.iter().flatten() {
+                    for (key, _) in &env.values {
+                        if sub_match.as_str() == &format!("{{{{{}}}}}", key) {
+                            let range = sub_match.range();
 
-                                spans.push(Span::raw(input[tmp_index..range.start].to_string()));
-                                spans.push(Span::raw(sub_match.as_str().to_owned()).cyan());
+                            spans.push(Span::raw(input[tmp_index..range.start].to_string()));
+                            spans.push(Span::raw(sub_match.as_str().to_owned()).cyan());
 
-                                tmp_index = range.end;
-                            }
+                            tmp_index = range.end;
                         }
                     }
                 }

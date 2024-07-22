@@ -401,14 +401,15 @@ impl App<'_> {
                 CreatingCollectionMoveCursorRight(_) => {
                     self.new_collection_input.move_cursor_right()
                 }
-                CreatingCollectionCharInput(_) => match key {
-                    KeyCombination {
+                CreatingCollectionCharInput(_) => {
+                    if let KeyCombination {
                         codes: One(KeyCode::Char(char)),
                         ..
-                    } => self.new_collection_input.enter_char(char),
-                    _ => {}
-                },
-
+                    } = key
+                    {
+                        self.new_collection_input.enter_char(char)
+                    }
+                }
                 CreateNewRequest(_) => self.new_request(),
                 CreatingRequestDeleteCharBackward(_) => {
                     self.new_request_popup.text_input.delete_char_forward()
@@ -426,27 +427,34 @@ impl App<'_> {
                     self.new_request_popup.previous_collection()
                 }
                 CreatingRequestSelectCollectionDown(_) => self.new_request_popup.next_collection(),
-                CreatingRequestCharInput(_) => match key {
-                    KeyCombination {
+                CreatingRequestCharInput(_) => {
+                    if let KeyCombination {
                         codes: One(KeyCode::Char(char)),
                         ..
-                    } => self.new_request_popup.text_input.enter_char(char),
-                    _ => {}
-                },
+                    } = key
+                    {
+                        self.new_request_popup.text_input.enter_char(char)
+                    }
+                }
 
                 DeletingCollectionMoveCursorLeft(_) => self.delete_collection_popup.change_state(),
                 DeletingCollectionMoveCursorRight(_) => self.delete_collection_popup.change_state(),
-                DeleteCollection(_) => match self.delete_collection_popup.state {
-                    true => self.delete_collection(),
-                    false => self.normal_state(),
-                },
-
+                DeleteCollection(_) => {
+                    if self.delete_collection_popup.state {
+                        self.delete_collection()
+                    } else {
+                        self.normal_state()
+                    }
+                }
                 DeletingRequestMoveCursorLeft(_) => self.delete_request_popup.change_state(),
                 DeletingRequestMoveCursorRight(_) => self.delete_request_popup.change_state(),
-                DeleteRequest(_) => match self.delete_request_popup.state {
-                    true => self.delete_request(),
-                    false => self.normal_state(),
-                },
+                DeleteRequest(_) => {
+                    if self.delete_request_popup.state {
+                        self.delete_request()
+                    } else {
+                        self.normal_state()
+                    }
+                }
 
                 RenameCollection(_) => self.rename_collection(),
                 RenamingCollectionDeleteCharBackward(_) => {
@@ -461,14 +469,15 @@ impl App<'_> {
                 RenamingCollectionMoveCursorRight(_) => {
                     self.rename_collection_input.move_cursor_right()
                 }
-                RenamingCollectionCharInput(_) => match key {
-                    KeyCombination {
+                RenamingCollectionCharInput(_) => {
+                    if let KeyCombination {
                         codes: One(KeyCode::Char(char)),
                         ..
-                    } => self.rename_collection_input.enter_char(char),
-                    _ => {}
-                },
-
+                    } = key
+                    {
+                        self.rename_collection_input.enter_char(char)
+                    }
+                }
                 RenameRequest(_) => self.rename_request(),
                 RenamingRequestDeleteCharBackward(_) => {
                     self.rename_request_input.delete_char_forward()
@@ -478,13 +487,15 @@ impl App<'_> {
                 }
                 RenamingRequestMoveCursorLeft(_) => self.rename_request_input.move_cursor_left(),
                 RenamingRequestMoveCursorRight(_) => self.rename_request_input.move_cursor_right(),
-                RenamingRequestCharInput(_) => match key {
-                    KeyCombination {
+                RenamingRequestCharInput(_) => {
+                    if let KeyCombination {
                         codes: One(KeyCode::Char(char)),
                         ..
-                    } => self.rename_request_input.enter_char(char),
-                    _ => {}
-                },
+                    } = key
+                    {
+                        self.rename_request_input.enter_char(char)
+                    }
+                }
 
                 /* Selected Request */
                 GoBackToRequestMenu(_) => self.select_request_state(),
@@ -502,10 +513,11 @@ impl App<'_> {
                 ModifyRequestAuthMethod(_) => self.modify_request_auth(),
                 ModifyRequestBodyContentType(_) => self.modify_request_content_type(),
 
-                EditRequestQueryParam(_) => match self.query_params_table.is_selected() {
-                    true => self.edit_request_param_state(),
-                    false => {}
-                },
+                EditRequestQueryParam(_) => {
+                    if self.query_params_table.is_selected() {
+                        self.edit_request_param_state()
+                    }
+                }
                 RequestQueryParamsMoveUp(_) => self.query_params_table.up(),
                 RequestQueryParamsMoveDown(_) => self.query_params_table.down(),
                 RequestQueryParamsMoveLeft(_) | RequestQueryParamsMoveRight(_) => {
@@ -515,23 +527,27 @@ impl App<'_> {
                 DeleteRequestQueryParam(_) => self.delete_query_param(),
                 ToggleRequestQueryParam(_) => self.toggle_query_param(),
 
-                EditRequestAuth(_) => match self.auth_text_input_selection.usable {
-                    true => self.select_request_auth_input_text(),
-                    false => {}
-                },
-                RequestAuthMoveUp(_) => match self.auth_text_input_selection.usable {
-                    true => self.auth_text_input_selection.previous(),
-                    false => {}
-                },
-                RequestAuthMoveDown(_) => match self.auth_text_input_selection.usable {
-                    true => self.auth_text_input_selection.next(),
-                    false => {}
-                },
+                EditRequestAuth(_) => {
+                    if self.auth_text_input_selection.usable {
+                        self.select_request_auth_input_text()
+                    }
+                }
+                RequestAuthMoveUp(_) => {
+                    if self.auth_text_input_selection.usable {
+                        self.auth_text_input_selection.previous()
+                    }
+                }
+                RequestAuthMoveDown(_) => {
+                    if self.auth_text_input_selection.usable {
+                        self.auth_text_input_selection.next()
+                    }
+                }
 
-                EditRequestHeader(_) => match self.headers_table.is_selected() {
-                    true => self.edit_request_header_state(),
-                    false => {}
-                },
+                EditRequestHeader(_) => {
+                    if self.headers_table.is_selected() {
+                        self.edit_request_header_state()
+                    }
+                }
                 RequestHeadersMoveUp(_) => self.headers_table.up(),
                 RequestHeadersMoveDown(_) => self.headers_table.down(),
                 RequestHeadersMoveLeft(_) | RequestHeadersMoveRight(_) => {
@@ -541,10 +557,13 @@ impl App<'_> {
                 DeleteRequestHeader(_) => self.delete_header(),
                 ToggleRequestHeader(_) => self.toggle_header(),
 
-                EditRequestBody(_) => match self.body_form_table.is_selected() {
-                    true => self.edit_request_body_table_state(),
-                    false => self.edit_request_body_file_or_string_state(),
-                },
+                EditRequestBody(_) => {
+                    if self.body_form_table.is_selected() {
+                        self.edit_request_body_table_state()
+                    } else {
+                        self.edit_request_body_file_or_string_state()
+                    }
+                }
                 RequestBodyTableMoveUp(_) => self.body_form_table.up(),
                 RequestBodyTableMoveDown(_) => self.body_form_table.down(),
                 RequestBodyTableMoveLeft(_) | RequestBodyTableMoveRight(_) => {
@@ -575,13 +594,15 @@ impl App<'_> {
                 EditingRequestUrlDeleteCharForward(_) => self.url_text_input.delete_char_backward(),
                 EditingRequestUrlMoveCursorLeft(_) => self.url_text_input.move_cursor_left(),
                 EditingRequestUrlMoveCursorRight(_) => self.url_text_input.move_cursor_right(),
-                EditingRequestUrlCharInput(_) => match key {
-                    KeyCombination {
+                EditingRequestUrlCharInput(_) => {
+                    if let KeyCombination {
                         codes: One(KeyCode::Char(char)),
                         ..
-                    } => self.url_text_input.enter_char(char),
-                    _ => {}
-                },
+                    } = key
+                    {
+                        self.url_text_input.enter_char(char)
+                    }
+                }
 
                 ModifyRequestQueryParam(_) => self.modify_request_query_param(),
                 EditingRequestQueryParamDeleteCharBackward(_) => self
@@ -600,16 +621,17 @@ impl App<'_> {
                     .query_params_table
                     .selection_text_input
                     .move_cursor_right(),
-                EditingRequestQueryParamCharInput(_) => match key {
-                    KeyCombination {
+                EditingRequestQueryParamCharInput(_) => {
+                    if let KeyCombination {
                         codes: One(KeyCode::Char(char)),
                         ..
-                    } => self
-                        .query_params_table
-                        .selection_text_input
-                        .enter_char(char),
-                    _ => {}
-                },
+                    } = key
+                    {
+                        self.query_params_table
+                            .selection_text_input
+                            .enter_char(char)
+                    }
+                }
 
                 /* Auth */
                 // self.auth_text_input_selection.usable
@@ -626,14 +648,15 @@ impl App<'_> {
                 EditingRequestAuthUsernameMoveCursorRight(_) => {
                     self.auth_basic_username_text_input.move_cursor_right()
                 }
-                EditingRequestAuthUsernameCharInput(_) => match key {
-                    KeyCombination {
+                EditingRequestAuthUsernameCharInput(_) => {
+                    if let KeyCombination {
                         codes: One(KeyCode::Char(char)),
                         ..
-                    } => self.auth_basic_username_text_input.enter_char(char),
-                    _ => {}
-                },
-
+                    } = key
+                    {
+                        self.auth_basic_username_text_input.enter_char(char)
+                    }
+                }
                 ModifyRequestAuthPassword(_) => self.modify_request_auth_basic_password(),
                 EditingRequestAuthPasswordDeleteCharBackward(_) => {
                     self.auth_basic_password_text_input.delete_char_forward()
@@ -647,14 +670,15 @@ impl App<'_> {
                 EditingRequestAuthPasswordMoveCursorRight(_) => {
                     self.auth_basic_password_text_input.move_cursor_right()
                 }
-                EditingRequestAuthPasswordCharInput(_) => match key {
-                    KeyCombination {
+                EditingRequestAuthPasswordCharInput(_) => {
+                    if let KeyCombination {
                         codes: One(KeyCode::Char(char)),
                         ..
-                    } => self.auth_basic_password_text_input.enter_char(char),
-                    _ => {}
-                },
-
+                    } = key
+                    {
+                        self.auth_basic_password_text_input.enter_char(char)
+                    }
+                }
                 ModifyRequestAuthBearerToken(_) => self.modify_request_auth_bearer_token(),
                 EditingRequestAuthBearerTokenDeleteCharBackward(_) => {
                     self.auth_bearer_token_text_input.delete_char_forward()
@@ -668,13 +692,15 @@ impl App<'_> {
                 EditingRequestAuthBearerTokenMoveCursorRight(_) => {
                     self.auth_bearer_token_text_input.move_cursor_right()
                 }
-                EditingRequestAuthBearerTokenCharInput(_) => match key {
-                    KeyCombination {
+                EditingRequestAuthBearerTokenCharInput(_) => {
+                    if let KeyCombination {
                         codes: One(KeyCode::Char(char)),
                         ..
-                    } => self.auth_bearer_token_text_input.enter_char(char),
-                    _ => {}
-                },
+                    } = key
+                    {
+                        self.auth_bearer_token_text_input.enter_char(char)
+                    }
+                }
 
                 /* Header */
                 ModifyRequestHeader(_) => self.modify_request_header(),
@@ -692,13 +718,15 @@ impl App<'_> {
                 EditingRequestHeaderMoveCursorRight(_) => {
                     self.headers_table.selection_text_input.move_cursor_right()
                 }
-                EditingRequestHeaderCharInput(_) => match key {
-                    KeyCombination {
+                EditingRequestHeaderCharInput(_) => {
+                    if let KeyCombination {
                         codes: One(KeyCode::Char(char)),
                         ..
-                    } => self.headers_table.selection_text_input.enter_char(char),
-                    _ => {}
-                },
+                    } = key
+                    {
+                        self.headers_table.selection_text_input.enter_char(char)
+                    }
+                }
 
                 /* Body */
                 ModifyRequestBodyTable(_) => self.modify_request_form_data(),
@@ -717,14 +745,15 @@ impl App<'_> {
                     .body_form_table
                     .selection_text_input
                     .move_cursor_right(),
-                EditingRequestBodyTableCharInput(_) => match key {
-                    KeyCombination {
+                EditingRequestBodyTableCharInput(_) => {
+                    if let KeyCombination {
                         codes: One(KeyCode::Char(char)),
                         ..
-                    } => self.body_form_table.selection_text_input.enter_char(char),
-                    _ => {}
-                },
-
+                    } = key
+                    {
+                        self.body_form_table.selection_text_input.enter_char(char)
+                    }
+                }
                 ModifyRequestBodyFile(_) => self.modify_request_body(),
                 EditingRequestBodyFileDeleteCharBackward(_) => {
                     self.body_file_text_input.delete_char_forward()
@@ -738,14 +767,15 @@ impl App<'_> {
                 EditingRequestBodyFileMoveCursorRight(_) => {
                     self.body_file_text_input.move_cursor_right()
                 }
-                EditingRequestBodyFileCharInput(_) => match key {
-                    KeyCombination {
+                EditingRequestBodyFileCharInput(_) => {
+                    if let KeyCombination {
                         codes: One(KeyCode::Char(char)),
                         ..
-                    } => self.body_file_text_input.enter_char(char),
-                    _ => {}
-                },
-
+                    } = key
+                    {
+                        self.body_file_text_input.enter_char(char)
+                    }
+                }
                 EditingRequestBodyStringVimInput(_) => match self
                     .body_text_area_vim_emulation
                     .transition(key, &mut self.body_text_area)
@@ -806,13 +836,15 @@ impl App<'_> {
                 EditingRequestBodyStringMoveCursorRight(_) => {
                     self.body_text_area.move_cursor(CursorMove::Forward)
                 }
-                EditingRequestBodyStringCharInput(_) => match key {
-                    KeyCombination {
+                EditingRequestBodyStringCharInput(_) => {
+                    if let KeyCombination {
                         codes: One(KeyCode::Char(char)),
                         ..
-                    } => self.body_text_area.insert_char(char),
-                    _ => {}
-                },
+                    } = key
+                    {
+                        self.body_text_area.insert_char(char)
+                    }
+                }
 
                 /* Scripts */
                 EditingPreRequestScriptVimInput(_) => match self
@@ -890,13 +922,15 @@ impl App<'_> {
                     .script_console
                     .pre_request_text_area
                     .move_cursor(CursorMove::Forward),
-                EditingPreRequestScriptCharInput(_) => match key {
-                    KeyCombination {
+                EditingPreRequestScriptCharInput(_) => {
+                    if let KeyCombination {
                         codes: One(KeyCode::Char(char)),
                         ..
-                    } => self.script_console.pre_request_text_area.insert_char(char),
-                    _ => {}
-                },
+                    } = key
+                    {
+                        self.script_console.pre_request_text_area.insert_char(char)
+                    }
+                }
 
                 EditingPostRequestScriptVimInput(_) => match self
                     .script_console
@@ -977,13 +1011,15 @@ impl App<'_> {
                     .script_console
                     .post_request_text_area
                     .move_cursor(CursorMove::Forward),
-                EditingPostRequestScriptCharInput(_) => match key {
-                    KeyCombination {
+                EditingPostRequestScriptCharInput(_) => {
+                    if let KeyCombination {
                         codes: One(KeyCode::Char(char)),
                         ..
-                    } => self.script_console.post_request_text_area.insert_char(char),
-                    _ => {}
-                },
+                    } = key
+                    {
+                        self.script_console.post_request_text_area.insert_char(char)
+                    }
+                }
 
                 /* Settings */
                 RequestSettingsMoveUp(_) => self.request_settings_popup.previous(),

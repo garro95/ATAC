@@ -40,8 +40,8 @@ impl App<'_> {
 
             if let Some(form) = selected_request.body.get_form_mut() {
                 match selection {
-                    (x, 0) => form[x].data.0 = input_text.clone(),
-                    (x, 1) => form[x].data.1 = input_text.clone(),
+                    (x, 0) => form[x].data.0.clone_from(input_text),
+                    (x, 1) => form[x].data.1.clone_from(input_text),
                     (_, _) => {}
                 };
             }
@@ -114,7 +114,7 @@ impl App<'_> {
         self.update_inputs();
     }
 
-    pub fn refresh_body_textarea(&mut self, text: &String) {
+    pub fn refresh_body_textarea(&mut self, text: &str) {
         let lines: Vec<String> = text.lines().map(|line| line.to_string()).collect();
 
         self.body_text_area = TextArea::new(lines);

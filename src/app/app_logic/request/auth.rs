@@ -28,10 +28,11 @@ impl App<'_> {
                 1 => self.edit_request_auth_password_state(),
                 _ => {}
             },
-            BearerToken(_) => match self.auth_text_input_selection.selected {
-                0 => self.edit_request_auth_bearer_token_state(),
-                _ => {}
-            },
+            BearerToken(_) => {
+                if self.auth_text_input_selection.selected == 0 {
+                    self.edit_request_auth_bearer_token_state()
+                }
+            }
         }
     }
 
@@ -44,11 +45,8 @@ impl App<'_> {
         {
             let mut selected_request = local_selected_request.write();
 
-            match &selected_request.auth {
-                BasicAuth(_, password) => {
-                    selected_request.auth = BasicAuth(input_text, password.to_string());
-                }
-                _ => {}
+            if let BasicAuth(_, password) = &selected_request.auth {
+                selected_request.auth = BasicAuth(input_text, password.to_string());
             }
         }
 
@@ -65,11 +63,8 @@ impl App<'_> {
         {
             let mut selected_request = local_selected_request.write();
 
-            match &selected_request.auth {
-                BasicAuth(username, _) => {
-                    selected_request.auth = BasicAuth(username.to_string(), input_text);
-                }
-                _ => {}
+            if let BasicAuth(username, _) = &selected_request.auth {
+                selected_request.auth = BasicAuth(username.to_string(), input_text);
             }
         }
 
@@ -86,11 +81,8 @@ impl App<'_> {
         {
             let mut selected_request = local_selected_request.write();
 
-            match &selected_request.auth {
-                BearerToken(_) => {
-                    selected_request.auth = BearerToken(input_text);
-                }
-                _ => {}
+            if let BearerToken(_) = &selected_request.auth {
+                selected_request.auth = BearerToken(input_text);
             }
         }
 

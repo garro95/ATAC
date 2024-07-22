@@ -61,12 +61,15 @@ impl App<'_> {
                     .expect("Could not copy cookies to clipboard"),
             },
             RequestResultTabs::Headers => {
-                let headers_string: String = selected_request
-                    .response
-                    .headers
-                    .iter()
-                    .map(|(header, value)| format!("{}: {}\n", header, value))
-                    .collect();
+                use std::fmt::Write;
+
+                let headers_string: String = selected_request.response.headers.iter().fold(
+                    String::new(),
+                    |mut output, (header, value)| {
+                        let _ = writeln!(output, "{}: {}", header, value);
+                        output
+                    },
+                );
 
                 clipboard
                     .set_text(headers_string)

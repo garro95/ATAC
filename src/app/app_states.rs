@@ -1493,7 +1493,7 @@ impl AppState {
 }
 
 pub fn event_available_keys_to_spans(
-    events: &Vec<AppEvent>,
+    events: &[AppEvent],
     fg_color: Color,
     bg_color: Color,
     short_only: bool,
@@ -1501,11 +1501,7 @@ pub fn event_available_keys_to_spans(
     let mut spans: Vec<Vec<Span>> = vec![];
 
     for event in events.iter() {
-        let is_documentation = match event {
-            Documentation(_) => true,
-            _ => false,
-        };
-
+        let is_documentation = matches!(event, Documentation(_));
         let event_key_bindings = event.get_event_key_bindings();
 
         if let Some(key_spans) =

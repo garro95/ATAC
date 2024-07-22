@@ -30,8 +30,10 @@ impl App<'_> {
 
         self.url_text_input
             .enter_str(&selected_request.url_with_params_to_string());
-        self.query_params_table.rows = selected_request.params.clone();
-        self.headers_table.rows = selected_request.headers.clone();
+        self.query_params_table
+            .rows
+            .clone_from(&selected_request.params);
+        self.headers_table.rows.clone_from(&selected_request.headers);
 
         if !selected_request.params.is_empty() {
             let selection = self.query_params_table.selection.unwrap();
@@ -84,10 +86,10 @@ impl App<'_> {
         match &selected_request.body {
             ContentType::NoBody => {
                 self.body_form_table.rows = Vec::new();
-                self.refresh_body_textarea(&String::new());
+                self.refresh_body_textarea("");
             }
             ContentType::Multipart(form) | ContentType::Form(form) => {
-                self.body_form_table.rows = form.clone();
+                self.body_form_table.rows.clone_from(form);
 
                 if !form.is_empty() {
                     let selection = self.body_form_table.selection.unwrap();
@@ -103,7 +105,7 @@ impl App<'_> {
                         .enter_str(&form_text);
                 }
 
-                self.refresh_body_textarea(&String::new());
+                self.refresh_body_textarea("");
             }
             ContentType::File(file_path) => {
                 self.body_file_text_input.enter_str(file_path);

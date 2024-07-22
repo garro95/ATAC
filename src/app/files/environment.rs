@@ -81,7 +81,7 @@ fn parse_line(entry: &[u8]) -> Option<(String, String)> {
 /// Save app environment in a file through a temporary file
 pub fn save_environment_to_file(environment: &Environment) {
     use std::fmt::Write;
-    
+
     if !ARGS.should_save {
         return;
     }
@@ -100,13 +100,14 @@ pub fn save_environment_to_file(environment: &Environment) {
         .open(&temp_file_path)
         .expect("Could not open temp file");
 
-    let mut data: String = environment
-        .values
-        .iter()
-        .fold(String::new(), |mut output, (key, value)| {
-            writeln!(output, "{key}={value}").unwrap();
-            output
-        });
+    let mut data: String =
+        environment
+            .values
+            .iter()
+            .fold(String::new(), |mut output, (key, value)| {
+                writeln!(output, "{key}={value}").unwrap();
+                output
+            });
 
     data.pop();
 

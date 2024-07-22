@@ -99,7 +99,7 @@ impl App<'_> {
         let selected_request_index = self.collections_tree.state.selected();
 
         let collection_name = &self.collections[selected_request_index[0]].name;
-        self.rename_collection_input.text = collection_name.clone();
+        self.rename_collection_input.text.clone_from(collection_name);
         self.rename_collection_input.cursor_position = collection_name.len();
 
         self.state = AppState::RenamingCollection;
@@ -112,7 +112,7 @@ impl App<'_> {
             let selected_request = self.collections[selected_request_index[0]].requests
                 [selected_request_index[1]]
                 .read();
-            self.rename_request_input.text = selected_request.name.clone();
+            self.rename_request_input.text.clone_from(&selected_request.name);
             self.rename_request_input.cursor_position = selected_request.name.len();
         }
 

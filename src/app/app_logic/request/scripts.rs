@@ -182,8 +182,10 @@ pub(super) fn execute_post_request_script(
         ) {
             Ok((mut response_result, result_env_values, console_output)) => {
                 // Avoid loosing those fields since they are not serialized
-                response_result.duration = response.duration.clone();
-                response_result.status_code = response.status_code.clone();
+                response_result.duration.clone_from(&response.duration);
+                response_result
+                    .status_code
+                    .clone_from(&response.status_code);
 
                 (Some(response_result), result_env_values, console_output)
             }

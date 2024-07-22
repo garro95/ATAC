@@ -32,8 +32,8 @@ impl App<'_> {
             let input_text = &self.headers_table.selection_text_input.text;
 
             match selection {
-                (x, 0) => selected_request.headers[x].data.0 = input_text.clone(),
-                (x, 1) => selected_request.headers[x].data.1 = input_text.clone(),
+                (x, 0) => selected_request.headers[x].data.0.clone_from(input_text),
+                (x, 1) => selected_request.headers[x].data.1.clone_from(input_text),
                 (_, _) => {}
             };
         }
