@@ -1,4 +1,3 @@
-use ratatui::prelude::Color;
 use serde::{Deserialize, Serialize};
 use strum::{Display, EnumString};
 
@@ -22,18 +21,6 @@ pub enum Method {
 }
 
 impl Method {
-    pub fn get_color(&self) -> Color {
-        match self {
-            Method::GET => Color::Green,
-            Method::POST => Color::Rgb(231, 186, 0),
-            Method::PUT => Color::LightBlue,
-            Method::PATCH => Color::LightCyan,
-            Method::DELETE => Color::LightRed,
-            Method::HEAD => Color::Green,
-            Method::OPTIONS => Color::Magenta,
-        }
-    }
-
     pub fn to_reqwest(&self) -> reqwest::Method {
         match self {
             Method::GET => reqwest::Method::GET,

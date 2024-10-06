@@ -1,6 +1,7 @@
 use crate::app::app::App;
-use crate::request::body::{next_content_type, ContentType};
+use crate::request::body::ContentType;
 use crate::request::request::KeyValue;
+use crate::utils::next_content_type;
 use reqwest::header::CONTENT_TYPE;
 use tui_textarea::TextArea;
 

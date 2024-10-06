@@ -19,9 +19,10 @@ use crate::app::app_logic::request::scripts::{
 use crate::app::files::environment::save_environment_to_file;
 use crate::panic_error;
 use crate::request::auth::Auth::{BasicAuth, BearerToken, NoAuth};
-use crate::request::body::{find_file_format_in_content_type, ContentType};
+use crate::request::body::ContentType;
 use crate::request::request::Request;
 use crate::request::response::{ImageResponse, RequestResponse, ResponseContent};
+use crate::utils::find_file_format_in_content_type;
 use crate::utils::syntax_highlighting::highlight;
 
 impl App<'_> {

@@ -2,12 +2,53 @@ use crate::app::app::App;
 use crate::app::app_states::AppState::EditingRequestUrl;
 use crate::app::ui::views::RequestView;
 use crate::request::request::Request;
+use crate::request::method::Method;
 use ratatui::layout::Direction::{Horizontal, Vertical};
 use ratatui::layout::{Alignment, Constraint, Layout, Rect};
 use ratatui::prelude::Color::White;
+use ratatui::prelude::{Color, Line, Modifier, Span};
 use ratatui::style::Stylize;
 use ratatui::widgets::{Block, Borders, Padding, Paragraph};
 use ratatui::Frame;
+
+use tui_tree_widget::TreeItem;
+
+
+pub fn method_to_color(method: &Method) -> Color {
+    match method {
+        Method::GET => Color::Green,
+        Method::POST => Color::Rgb(231, 186, 0),
+        Method::PUT => Color::LightBlue,
+        Method::PATCH => Color::LightCyan,
+        Method::DELETE => Color::LightRed,
+        Method::HEAD => Color::Green,
+        Method::OPTIONS => Color::Magenta,
+    }
+}
+
+pub fn request_to_tree_item<'a>(request: &Request, identifier: usize) -> TreeItem<'a, usize> {
+    let mut line_elements: Vec<Span> = vec![];
+
+    let prefix = Span::from(request.method.to_string())
+        .style(Modifier::BOLD)
+        .bg(method_to_color(&request.method));
+
+    line_elements.push(prefix);
+
+    if request.is_pending {
+        line_elements.push(Span::raw(" 🕛"));
+    } else {
+        line_elements.push(Span::raw(" "));
+    }
+
+    let text = Span::from(request.name.clone());
+
+    line_elements.push(text);
+
+    let line = Line::from(line_elements);
+
+    TreeItem::new_leaf(identifier, line)
+}
 
 impl App<'_> {
     pub(super) fn render_request(&mut self, frame: &mut Frame, rect: Rect, request: Request) {
@@ -50,7 +91,7 @@ impl App<'_> {
         let method_area = method_block.inner(request_header_layout[0]);
 
         let method_paragraph = Paragraph::new(method.to_string())
-            .bg(method.get_color())
+            .bg(method_to_color(&method))
             .fg(White)
             .centered();
 

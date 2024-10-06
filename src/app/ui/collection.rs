@@ -1,9 +1,31 @@
 use crate::app::app::App;
+use crate::app::ui::request::request_to_tree_item;
+use crate::request::collection::Collection;
 use ratatui::layout::Rect;
 use ratatui::prelude::{Modifier, Style};
+use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Borders};
 use ratatui::Frame;
 use tui_tree_widget::{Tree, TreeItem};
+
+
+pub fn collection_to_tree_item<'a>(collection: &Collection, identifier: usize) -> TreeItem<'a, usize> {
+    let name = collection.name.clone();
+
+    let line = Line::from(vec![
+        Span::raw(name),
+        Span::from(format!(" ({})", collection.requests.len())),
+    ]);
+
+    let items: Vec<TreeItem<usize>> = collection
+        .requests
+        .iter()
+        .enumerate()
+        .map(|(request_index, request)| request_to_tree_item(&request.read(), request_index))
+        .collect();
+
+    TreeItem::new(identifier, line, items).unwrap()
+}
 
 impl<'a> App<'a> {
     pub(super) fn render_collections(&mut self, frame: &mut Frame, rect: Rect) {
@@ -11,7 +33,7 @@ impl<'a> App<'a> {
             .collections
             .iter()
             .enumerate()
-            .map(|(collection_index, request)| request.to_tree_item(collection_index))
+            .map(|(collection_index, request)| collection_to_tree_item(request, collection_index))
             .collect();
 
         let tree_items = self.collections_tree.items.clone();

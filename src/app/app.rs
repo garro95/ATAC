@@ -17,6 +17,8 @@ use crate::app::ui::result_tabs::RequestResultTabs;
 use crate::app::ui::views::RequestView;
 use crate::request::collection::Collection;
 use crate::request::environment::Environment;
+use crate::request::request::KeyValue;
+
 use crate::utils::choice_popup::ChoicePopup;
 use crate::utils::cookies_popup::CookiesPopup;
 use crate::utils::help_popup::HelpPopup;
@@ -30,6 +32,8 @@ use crate::utils::text_input::TextInput;
 use crate::utils::text_input_selection::TextInputSelection;
 use crate::utils::validation_popup::ValidationPopup;
 use crate::utils::vim_emulation::Vim;
+
+
 
 pub struct App<'a> {
     pub tick_rate: Duration,
@@ -195,5 +199,21 @@ impl App<'_> {
         }));
 
         self
+    }
+
+    pub fn key_value_vec_to_tuple_vec(&self, key_value: &[KeyValue]) -> Vec<(String, String)> {
+        key_value
+            .iter()
+            .filter_map(|param| {
+                if param.enabled {
+                    let key = self.replace_env_keys_by_value(&param.data.0);
+                    let value = self.replace_env_keys_by_value(&param.data.1);
+
+                    Some((key, value))
+                } else {
+                    None
+                }
+            })
+            .collect()
     }
 }

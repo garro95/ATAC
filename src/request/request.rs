@@ -1,10 +1,6 @@
 use lazy_static::lazy_static;
-use ratatui::prelude::{Line, Modifier, Span};
-use ratatui::style::Stylize;
 use serde::{Deserialize, Serialize};
-use tui_tree_widget::TreeItem;
 
-use crate::app::app::App;
 use crate::request::auth::Auth;
 use crate::request::body::ContentType;
 use crate::request::method::Method;
@@ -35,24 +31,6 @@ pub struct Request {
 pub struct KeyValue {
     pub data: (String, String),
     pub enabled: bool,
-}
-
-impl App<'_> {
-    pub fn key_value_vec_to_tuple_vec(&self, key_value: &[KeyValue]) -> Vec<(String, String)> {
-        key_value
-            .iter()
-            .filter_map(|param| {
-                if param.enabled {
-                    let key = self.replace_env_keys_by_value(&param.data.0);
-                    let value = self.replace_env_keys_by_value(&param.data.1);
-
-                    Some((key, value))
-                } else {
-                    None
-                }
-            })
-            .collect()
-    }
 }
 
 lazy_static! {
@@ -87,30 +65,6 @@ lazy_static! {
 }
 
 impl Request {
-    pub fn to_tree_item<'a>(&self, identifier: usize) -> TreeItem<'a, usize> {
-        let mut line_elements: Vec<Span> = vec![];
-
-        let prefix = Span::from(self.method.to_string())
-            .style(Modifier::BOLD)
-            .bg(self.method.get_color());
-
-        line_elements.push(prefix);
-
-        if self.is_pending {
-            line_elements.push(Span::raw(" 🕛"));
-        } else {
-            line_elements.push(Span::raw(" "));
-        }
-
-        let text = Span::from(self.name.clone());
-
-        line_elements.push(text);
-
-        let line = Line::from(line_elements);
-
-        TreeItem::new_leaf(identifier, line)
-    }
-
     pub fn url_with_params_to_string(&self) -> String {
         let mut base_url = self.url.to_string();
 

@@ -1,10 +1,7 @@
-use regex::Regex;
 use serde::{Deserialize, Serialize};
 use strum::Display;
 
-use crate::request::body::ContentType::{
-    File, Form, Html, Javascript, Json, Multipart, NoBody, Raw, Xml,
-};
+use crate::request::body::ContentType::*;
 use crate::request::request::KeyValue;
 
 #[derive(Default, Debug, Clone, Display, Serialize, Deserialize)]
@@ -71,33 +68,5 @@ impl ContentType {
             Multipart(form) | Form(form) => Some(form),
             _ => None,
         }
-    }
-}
-
-pub fn next_content_type(content_type: &ContentType) -> ContentType {
-    match content_type {
-        NoBody => Multipart(Vec::new()),
-        Multipart(_) => Form(Vec::new()),
-        Form(_) => File(String::new()),
-        File(_) => Raw(String::new()),
-        Raw(body) => Json(body.to_string()),
-        Json(body) => Xml(body.to_string()),
-        Xml(body) => Html(body.to_string()),
-        Html(body) => Javascript(body.to_string()),
-        Javascript(_) => NoBody,
-    }
-}
-
-/// Iter through the headers and tries to catch a file format like `application/<file_format>`
-pub fn find_file_format_in_content_type(headers: &[(String, String)]) -> Option<String> {
-    if let Some((_, content_type)) = headers.iter().find(|(header, _)| *header == "content-type") {
-        // Regex that likely catches the file format
-        let regex = Regex::new(r"\w+/(?<file_format>\w+)").unwrap();
-
-        return regex
-            .captures(content_type)
-            .map(|capture| capture["file_format"].to_string());
-    } else {
-        None
     }
 }

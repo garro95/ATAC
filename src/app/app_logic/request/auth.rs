@@ -1,5 +1,5 @@
 use crate::app::app::App;
-use crate::request::auth::next_auth;
+use crate::utils::next_auth;
 use crate::request::auth::Auth::{BasicAuth, BearerToken, NoAuth};
 
 impl App<'_> {
